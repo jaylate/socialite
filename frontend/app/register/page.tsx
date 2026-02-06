@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function Register() {
@@ -46,6 +47,8 @@ export default function Register() {
     return Object.keys(newErrors).length === 0
   }
 
+  const router = useRouter()
+
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
 
@@ -76,7 +79,7 @@ export default function Register() {
     console.log('Registered user:', data)
 
     alert('Registration successful')
-    // TODO: redirect to login or save user
+    router.replace('/login')
   } catch (error) {
     console.error(error)
     alert('Server is not responding')
