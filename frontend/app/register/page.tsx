@@ -47,15 +47,42 @@ export default function Register() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  e.preventDefault()
 
-    if (!validateForm()) {
+  if (!validateForm()) {
+    return
+  }
+
+  try {
+    const response = await fetch('http://localhost:8080/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password
+      })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      alert(data || 'Registration failed')
       return
     }
 
-    console.log('Registration data:', formData)
-    alert('Registration successful! (Frontend only for now)')
+    console.log('Registered user:', data)
+
+    alert('Registration successful')
+    // TODO: redirect to login or save user
+  } catch (error) {
+    console.error(error)
+    alert('Server is not responding')
   }
+}
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
