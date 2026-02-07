@@ -1,3 +1,65 @@
 @Socialite_HostAddress = http://localhost:5182
 
-###
+### Get All Posts
+GET {{Socialite_HostAddress}}/api/v1/posts
+
+### Create New Post
+POST {{Socialite_HostAddress}}/api/v1/posts
+Content-Type: application/json
+
+{
+  "title": "My First Post",
+  "content": "This is the content of my first post."
+}
+
+### Get Post by ID
+GET {{Socialite_HostAddress}}/api/v1/posts/123
+
+### Update Post by ID
+PUT {{Socialite_HostAddress}}/api/v1/posts/123
+Content-Type: application/json
+
+{
+  "title": "Updated Post Title",
+  "content": "This is the updated content of my post."
+}
+
+### Delete Post by ID
+DELETE {{Socialite_HostAddress}}/api/v1/posts/123
+
+### Like a Post by ID
+POST {{Socialite_HostAddress}}/api/v1/posts/123/like
+
+### Get All Users
+GET {{Socialite_HostAddress}}/api/v1/users
+
+### Get User by ID
+GET {{Socialite_HostAddress}}/api/v1/users/123
+
+### Update User by ID
+PUT {{Socialite_HostAddress}}/api/v1/users/123
+Content-Type: application/json
+
+{
+  "username": "updatedUser",
+  "email": "updated@example.com"
+}
+
+### User Login
+POST {{Socialite_HostAddress}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "Password123!"
+}
+
+### User Register
+POST {{Socialite_HostAddress}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "email": "newuser@example.com",
+  "password": "NewPassword123!"
+}
