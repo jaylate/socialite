@@ -8,12 +8,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
 app.MapGet("/api", () =>
 {
     return "Test";
-})
-.WithName("GetWeatherForecast");
+});
 
 app.Run();

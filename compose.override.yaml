@@ -21,10 +21,8 @@ services:
       # Keep binaries isolated inside the container
       - /src/bin
       - /src/obj
-    command: dotnet watch run -v detailed --non-interactive --urls http://*:80
+    command: dotnet watch run -v detailed --non-interactive --launch-profile http
     ports:
-      - 8080:80
+      - 5182:5182
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://*:80
       - DOTNET_USE_POLLING_FILE_WATCHER=1
