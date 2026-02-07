@@ -1,4 +1,11 @@
 services:
+  gateway:
+    build: ./infra/nginx
+    ports:
+      - 80:80
+    depends_on:
+      - frontend
+      - backend
   frontend:
     image: socialite-frontend
     build:
