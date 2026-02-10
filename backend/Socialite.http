@@ -1,4 +1,4 @@
-@Socialite_HostAddress = http://localhost:5182
+@Socialite_HostAddress = http://localhost
 
 ### Get All Posts
 GET {{Socialite_HostAddress}}/api/v1/posts
