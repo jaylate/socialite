@@ -2,40 +2,55 @@ using Socialite.Models;
 
 namespace Socialite.Services;
 
-public class LikeService
+public static class LikeService
 {
-    static List<Like> Likes { get; }
+    private static readonly List<Like> Likes;
+
     static LikeService()
     {
-	Likes = new List<Like>
-	{
-	    new Like { Id = 1, UserId = 2, PostId = 1 }
-	};
+        Likes = new List<Like>
+        {
+            new Like { Id = 1, UserId = 2, PostId = 1 }
+        };
     }
 
     public static List<Like> GetAll() => Likes;
-    public static Like? Get(int id) => Likes.FirstOrDefault(p => p.Id == id);
 
-    public static void Add(Like like)
+    public static List<Like> GetByPost(int postId) =>
+        Likes.Where(l => l.PostId == postId).ToList();
+
+    public static bool IsLiked(int userId, int postId) =>
+        Likes.Any(l => l.UserId == userId && l.PostId == postId);
+
+    public static int GetCount(int postId) =>
+        Likes.Count(l => l.PostId == postId);
+
+    public static Like? Add(int userId, int postId)
     {
+        if (IsLiked(userId, postId))
+            return null;
+
+        var like = new Like
+        {
+            Id = Likes.Count == 0 ? 1 : Likes.Max(l => l.Id) + 1,
+            UserId = userId,
+            PostId = postId
+        };
+
         Likes.Add(like);
+        return like;
     }
 
-    public static void Delete(int id)
+    public static bool Delete(int userId, int postId)
     {
-        var like = Get(id);
-        if(like is null)
-            return;
+        var like = Likes.FirstOrDefault(
+            l => l.UserId == userId && l.PostId == postId
+        );
+
+        if (like is null)
+            return false;
 
         Likes.Remove(like);
-    }
-
-    public static void Update(Like like)
-    {
-        var index = Likes.FindIndex(p => p.Id == like.Id);
-        if(index == -1)
-            return;
-
-        Likes[index] = like;
+        return true;
     }
 }
