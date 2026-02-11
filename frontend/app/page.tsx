@@ -6,17 +6,30 @@ export default function Feed() {
     try {
       const postsResponse = await fetch(`${process.env.baseUrl}/api/v1/posts`);
       if (!postsResponse.ok) {
-        throw new Error(`HTTP error: ${postsResponse.status}`);
+        throw new Error(`HTTP error when fetching posts: ${postsResponse.status}`);
       }
       const posts = await postsResponse.json();
 
       const postsData = await Promise.all(
 	posts.map(async post => {
 	  const userResponse = await fetch(`${process.env.baseUrl}/api/v1/users/${post.userId}`);
+          if (!userResponse.ok) {
+            throw new Error(`HTTP error when fetching user for post ${post.id}: ${postsResponse.status}`);
+          }
 	  const userData = await userResponse.json();
 
-	  const likesResponse = await fetch(`${process.env.baseUrl}/api/v1/likes/${post.id}`);
+	  const likesResponse = await fetch(`${process.env.baseUrl}/api/v1/posts/${post.id}/likes`);
+          /*if (!likesResponse.ok) {
+            throw new Error(`HTTP error when fetching likes for post ${post.id}: ${postsResponse.status}`);
+          }*/
 	  const likesData = await likesResponse.text();
+
+	  const wasLikedByUser = await fetch(`${process.env.baseUrl}/api/v1/posts/${post.id}/likes/me`)
+	    .then(res => {
+	      if (!res.ok) throw new Error(`HTTP error when fetching if post ${post.id} is liked by the user: ${postsResponse.status}`);
+	      return res.text();
+	    })
+	    .then(text => text === "true");
 
 	  return {
 	    id: post.id,
@@ -24,6 +37,7 @@ export default function Feed() {
 	    username: userData.username,
 	    content: post.content,
 	    likesCount: Number(likesData) ?? 0,
+	    wasLikedByUser: wasLikedByUser,
 	  };
         })
       );
@@ -53,10 +67,12 @@ export default function Feed() {
 	      fetchPosts().then(posts => posts.map(post =>
 		<Post
 		  key={post.id}
+		  id={post.id}
 	          fullname={post.fullname}
                   username={post.username}
 		  content={post.content}
 		  likesCount={post.likesCount}
+		  wasLikedByUser={post.wasLikedByUser}
 	        />
 	      ))
 	    }

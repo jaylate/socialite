@@ -1,4 +1,58 @@
-export default function Post({ fullname, username, content, likesCount }) {
+'use client';
+
+import { useState, useEffect } from 'react';
+
+const LikeButton = ({ id, wasLikedByUser: initialLiked }) => {
+  const [wasLikedByUser, setWasLikedByUser] = useState(initialLiked);
+
+  useEffect(() => {
+    setWasLikedByUser(initialLiked);
+  }, [initialLiked]);
+
+  const handleLike = async () => {
+    try {
+      /*const response = await fetch(`${process.env.baseUrl}/api/v1/posts/${id}/likes`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: 1 })
+      });
+      if (response.ok) {
+        setWasLikedByUser(!wasLikedByUser);
+      } else {
+        console.error("Failed to update like status");
+      }*/
+      setWasLikedByUser(!wasLikedByUser);
+    } catch (err) {
+      console.error("Error updating like status:", err);
+    }
+  };
+
+  return (
+    <button onClick={handleLike}>
+      <svg
+        className="text-gray-800 dark:text-white"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        fill={wasLikedByUser ? "currentColor" : "none"}
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
+        />
+      </svg>
+    </button>
+  );
+};
+
+export default function Post({ id, fullname, username, content, likesCount, wasLikedByUser }) {
   return (
     <div className="flex-col">
       <div className="flex">
@@ -9,9 +63,7 @@ export default function Post({ fullname, username, content, likesCount }) {
       <div className="flex">
         <div className="flex">
           <div className="py-1">
-	    <svg className="w-[20px] h-[20px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"/>
-            </svg>
+	    <LikeButton id={id} wasLikedByUser={wasLikedByUser} />
           </div>
           <span className="ml-2 text-gray-600 dark:text-neutral-200 py-0.5">{likesCount}</span>
         </div>
