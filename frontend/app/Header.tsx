@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Header() {
   return (
     <header className="">
@@ -9,8 +11,8 @@ export default function Header() {
             </a>
           </div>
           <div className="">
-            <a href="#" className="bg-neutral-800 dark:bg-neutral-600 text-white font-bold rounded-full py-3 px-7 mx-6">Login</a>
-            <a href="#" className="bg-neutral-800 dark:bg-neutral-600 text-white font-bold rounded-full py-3 px-7">Sign up</a>
+            <Link href="/login" className="bg-neutral-800 dark:bg-neutral-600 text-white font-bold rounded-full py-3 px-7 mx-6">Login</Link>
+            <Link href="/register" className="bg-neutral-800 dark:bg-neutral-600 text-white font-bold rounded-full py-3 px-7">Sign up</Link>
           </div>
         </nav>
         <hr className="h-px my-8 bg-gray-200 dark:bg-neutral-700 border-0"/>
