@@ -1,11 +1,11 @@
-export default function Post({ name, username, text, likesCount }) {
+export default function Post({ fullname, username, content, likesCount }) {
   return (
     <div className="flex-col">
       <div className="flex">
-        <span className="font-bold text-xl py-1 dark:text-neutral-100">{name}</span>
+        <span className="font-bold text-xl py-1 dark:text-neutral-100">{fullname}</span>
         <span className="text-gray-600 text-md ml-4 py-1.5 dark:text-neutral-300">@{username}</span>
       </div>
-      <div className="my-1 mb-3 px-2 text-[18px] dark:text-neutral-300">{text}</div>
+      <div className="my-1 mb-3 px-2 text-[18px] dark:text-neutral-300">{content}</div>
       <div className="flex">
         <div className="flex">
           <div className="py-1">

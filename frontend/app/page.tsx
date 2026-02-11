@@ -2,19 +2,39 @@ import Header from './Header.tsx';
 import Post from './Post.tsx';
 
 export default function Feed() {
-  const posts = [{
-    id: 1,
-    name: "John Doe",
-    username: "john",
-    text: "Aspernatur dolorem eaque fuga quis quisquam deserunt quis. Deleniti perferendis voluptatibus accusantium a fugit. Occaecati illum necessitatibus maxime similique. Facilis est omnis eveniet ullam et beatae. Esse ut illo ad quis et dignissimos atque culpa.",
-    likesCount: 1000
-  }, {
-    id: 2,
-    name: "Another Guy",
-    username: "huh",
-    text: "Hello",
-    likesCount: 69
-  }];
+  const fetchPosts = async () => {
+    try {
+      const postsResponse = await fetch(`${process.env.baseUrl}/api/v1/posts`);
+      if (!postsResponse.ok) {
+        throw new Error(`HTTP error: ${postsResponse.status}`);
+      }
+      const posts = await postsResponse.json();
+
+      const postsData = await Promise.all(
+	posts.map(async post => {
+	  const userResponse = await fetch(`${process.env.baseUrl}/api/v1/users/${post.userId}`);
+	  const userData = await userResponse.json();
+
+	  const likesResponse = await fetch(`${process.env.baseUrl}/api/v1/likes/${post.id}`);
+	  const likesData = await likesResponse.text();
+
+	  return {
+	    id: post.id,
+	    fullname: userData.name,
+	    username: userData.username,
+	    content: post.content,
+	    likesCount: Number(likesData) ?? 0,
+	  };
+        })
+      );
+
+      return postsData;
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+      throw error;
+    }
+  };
+
   return (
     <div className="mx-auto max-w-7xl">
       <Header />
@@ -30,15 +50,15 @@ export default function Feed() {
 	  </div>
 	  <div className="flex-col mt-10 space-y-5">
 	    {
-	      posts.map(post =>
+	      fetchPosts().then(posts => posts.map(post =>
 		<Post
 		  key={post.id}
-	          name={post.name}
+	          fullname={post.fullname}
                   username={post.username}
-		  text={post.text}
+		  content={post.content}
 		  likesCount={post.likesCount}
 	        />
-	      )
+	      ))
 	    }
 	  </div>
 	</div>
