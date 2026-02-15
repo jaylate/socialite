@@ -1,57 +1,59 @@
 using Socialite.Models;
+using Socialite.Repositories.Interfaces;
 
 namespace Socialite.Services;
 
 public class UserService
 {
-    private static List<User> Users { get; }
-    private static int _nextId = 3;
-    static UserService()
+    private readonly IUserRepository _userRepository;
+
+    public UserService(IUserRepository userRepository)
     {
-	Users = new List<User>
-	    {
-	        new User { Id = 1, Username = "admin", Name = "The Admin", Email = "admin@socialite.local", PasswordHash = "xxx", Bio = "Doing stuff that admins do", IsAdmin = true },
-	        new User { Id = 2, Username = "john", Name = "John Doe", Email = "john@socialite.local", PasswordHash = "xxx" },
-	    };
+        _userRepository = userRepository;
     }
 
-    public static List<User> GetAll() => Users;
-    public static User? Get(int id) => Users.FirstOrDefault(p => p.Id == id);
-
-    public static User Add(User user)
+    public async Task<IEnumerable<User>> GetAllAsync()
     {
-        user.Id = _nextId++;
-        user.CreatedAt = DateTime.UtcNow;
-        user.UpdatedAt = DateTime.UtcNow;
-
-        Users.Add(user);
-        return user;
+	return await _userRepository.GetAllAsync();
     }
 
-    public static void Delete(int id)
+    public async Task<User?> GetByIdAsync(int id)
     {
-        var user = Get(id);
-        if(user is null)
-            return;
-
-        Users.Remove(user);
+	return await _userRepository.GetByIdAsync(id);
     }
 
-    public static bool Update(int id, string username, string? name, string? bio)
+    public async Task<User> AddAsync(User user)
     {
-        var user = Get(id);
-        if (user is null)
+        return await _userRepository.CreateAsync(user);
+    }
+
+    public async Task<bool> UpdateAsync(int id, string username, string? name, string? bio, string? email)
+    {
+        User? user = await _userRepository.GetByIdAsync(id);
+        if (user == null)
             return false;
         
         user.Username = username;
         
         if (name is not null)
             user.Name = name;
-
+    
         if (bio is not null)
             user.Bio = bio;
 
-        user.UpdatedAt = DateTime.UtcNow;
+	if (email is not null)
+	    user.Email = email;
+    
+        await _userRepository.UpdateAsync(user);
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        if (!await _userRepository.ExistsAsync(id))
+            return false;
+    
+        await _userRepository.DeleteAsync(id);
         return true;
     }
 }

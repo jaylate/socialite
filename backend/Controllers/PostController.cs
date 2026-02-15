@@ -8,50 +8,68 @@ namespace Socialite.Controllers;
 [Route("api/v1/posts")]
 public class PostController : ControllerBase
 {
-    [HttpGet]
-    public ActionResult<List<PostDto>> GetAll()
+    private readonly PostService _postService;
+    private readonly LikeService _likeService;
+    public PostController(
+	PostService postService,
+	LikeService likeService)
     {
-        return PostService.GetAll()
-            .Select(p => new PostDto(
+        _postService = postService;
+        _likeService = likeService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<PostResponseDto>>> GetAll(
+	[FromQuery] int? userId,
+	[FromQuery] int skip = 0,
+	[FromQuery] int limit = 20)
+    {
+	var posts = (await _postService.GetAllAsync())
+            .Select(p => new PostResponseDto(
                 p.Id,
-                p.UserId,
                 p.Content,
-                p.CreatedAt
+                p.User.Name ?? p.User.Username,
+                p.User.Username,
+                p.Likes.Count,
+                p.CreatedAt,
+		userId.HasValue ? p.Likes.Any(l => l.UserId == userId.Value) : false
             ))
             .ToList();
+
+        return posts;
     }
 
     [HttpGet("{id}")]
-    public ActionResult<PostDto> Get(int id)
+    public async Task<ActionResult<PostResponseDto>> Get(
+	int id,
+	[FromQuery] int? userId)
     {
-        var post = PostService.Get(id);
+        var post = await _postService.GetByIdAsync(id);
         if (post is null)
             return NotFound();
 
-        return new PostDto(
+        return new PostResponseDto(
             post.Id,
-            post.UserId,
             post.Content,
-            post.CreatedAt
+            post.User.Name ?? post.User.Username,
+            post.User.Username,
+            post.Likes.Count,
+            post.CreatedAt,
+	    userId.HasValue ? post.Likes.Any(l => l.UserId == userId.Value) : false
         );
     }
 
     [HttpPost]
-    public IActionResult Create([FromQuery] int userId, CreatePostDto dto)
+    public async Task<IActionResult> Create([FromQuery] int userId, CreatePostDto dto)
     {
-        var post = PostService.Add(userId, dto.Content);
-
-        return CreatedAtAction(
-            nameof(Get),
-            new { id = post.Id },
-            new PostDto(post.Id, post.UserId, post.Content, post.CreatedAt)
-        );
+        await _postService.AddAsync(userId, dto.Content);
+        return Ok();
     }
     
     [HttpPut("{id}")]
-    public IActionResult Update(int id, UpdatePostDto dto)
+    public async Task<IActionResult> Update(int id, UpdatePostDto dto)
     {
-        var updated = PostService.Update(id, dto.Content);
+        var updated = await _postService.UpdateAsync(id, dto.Content);
         if (!updated)
             return NotFound();
 
@@ -59,12 +77,36 @@ public class PostController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var deleted = PostService.Delete(id);
+        var deleted = await _postService.DeleteAsync(id);
         if (!deleted)
             return NotFound();
 
         return NoContent();
+    }
+
+    [HttpGet("user/{userId}")]
+    public async Task<ActionResult<List<PostResponseDto>>> GetByUser(
+        int userId,
+        [FromQuery] int? currentUserId,
+        [FromQuery] int skip = 0,
+        [FromQuery] int limit = 20)
+    {
+        var posts = (await _postService.GetByUserIdAsync(userId))
+            .Skip(skip)
+            .Take(limit)
+            .Select(p => new PostResponseDto(
+                p.Id,
+                p.Content,
+                p.User.Name ?? p.User.Username,
+                p.User.Username,
+                p.Likes.Count,
+                p.CreatedAt,
+                currentUserId.HasValue ? p.Likes.Any(l => l.UserId == currentUserId.Value) : false
+            ))
+            .ToList();
+
+        return posts;
     }
 }

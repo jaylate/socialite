@@ -1,58 +1,68 @@
 using Socialite.Models;
+using Socialite.Repositories.Interfaces;
 
 namespace Socialite.Services;
 
 public class PostService
 {
-    private static List<Post> Posts { get; }
-    private static int _nextId = 3;
+    private readonly IPostRepository _postRepository;
+    private readonly IUserRepository _userRepository;
 
-    static PostService()
+    public PostService(
+	IPostRepository postRepository,
+	IUserRepository userRepository)
     {
-        Posts = new List<Post>
-        {
-            new Post { Id = 1, UserId = 1, Content = "Hello, World!" },
-            new Post { Id = 2, UserId = 2, Content = "Hello, Another World!" }
-        };
+	_postRepository = postRepository;
+        _userRepository = userRepository;
     }
 
-    public static List<Post> GetAll() => Posts;
-
-    public static Post? Get(int id) => Posts.FirstOrDefault(p => p.Id == id);
-
-    public static Post Add(int userId, string content)
+    public async Task<IEnumerable<Post>> GetAllAsync(int skip = 0, int take = 20)
     {
-        var post = new Post
-        {
-            Id = _nextId++,
-            UserId = userId,
-            Content = content,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-
-        Posts.Add(post);
-        return post;
+        return await _postRepository.GetAllAsync(skip, take);
     }
 
-    public static bool Update(int id, string content)
+    public async Task<IEnumerable<Post>> GetByUserIdAsync(int userId)
     {
-        var post = Get(id);
-        if (post is null)
+	return await _postRepository.GetByUserIdAsync(userId);
+    }
+
+    public async Task<Post?> GetByIdAsync(int id)
+    {
+	return await _postRepository.GetByIdAsync(id);
+    }
+
+    public async Task<Post> AddAsync(int userId, string content)
+    {
+	if (!await _userRepository.ExistsAsync(userId)) {
+	    throw new InvalidOperationException($"User with ID {userId} not found");
+	}
+
+	Post post = new Post {
+	    UserId = userId,
+	    Content = content
+	};
+
+	return await _postRepository.CreateAsync(post);
+    }
+
+    public async Task<bool> UpdateAsync(int id, string content)
+    {
+	Post? post = await _postRepository.GetByIdAsync(id);
+	if (post is null) {
+	    return false;
+	}
+
+	post.Content = content;
+	await _postRepository.UpdateAsync(post);
+	return true;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        if (!await _postRepository.ExistsAsync(id))
             return false;
 
-        post.Content = content;
-        post.UpdatedAt = DateTime.UtcNow;
-        return true;
-    }
-
-    public static bool Delete(int id)
-    {
-        var post = Get(id);
-        if (post is null)
-            return false;
-
-        Posts.Remove(post);
+        await _postRepository.DeleteAsync(id);
         return true;
     }
 }

@@ -1,11 +1,12 @@
 namespace Socialite.DTOs;
 
-public record UserDto(
+public record CurrentUserDto(
     int Id,
     string Username,
     string? Name,
     string Email,
     string? Bio,
     bool IsAdmin,
-    DateTime CreatedAt
+    DateTime CreatedAt,
+    DateTime UpdatedAt
 );

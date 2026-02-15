@@ -1,65 +1,72 @@
-@Socialite_HostAddress = http://localhost
+@Socialite_HostAddress = http://localhost:5182
+@UserId = 1
+@PostId = 1
 
 ### Get All Posts
 GET {{Socialite_HostAddress}}/api/v1/posts
 
+### Get All Posts (with current user context)
+GET {{Socialite_HostAddress}}/api/v1/posts?userId={{UserId}}
+
 ### Create New Post
-POST {{Socialite_HostAddress}}/api/v1/posts
+POST {{Socialite_HostAddress}}/api/v1/posts?userId={{UserId}}
 Content-Type: application/json
 
 {
-  "title": "My First Post",
   "content": "This is the content of my first post."
 }
 
 ### Get Post by ID
-GET {{Socialite_HostAddress}}/api/v1/posts/123
+GET {{Socialite_HostAddress}}/api/v1/posts/{{PostId}}
+
+### Get Post by ID (with current user like status)
+GET {{Socialite_HostAddress}}/api/v1/posts/{{PostId}}?userId={{UserId}}
 
 ### Update Post by ID
-PUT {{Socialite_HostAddress}}/api/v1/posts/123
+PUT {{Socialite_HostAddress}}/api/v1/posts/{{PostId}}
 Content-Type: application/json
 
 {
-  "title": "Updated Post Title",
   "content": "This is the updated content of my post."
 }
 
 ### Delete Post by ID
-DELETE {{Socialite_HostAddress}}/api/v1/posts/123
+DELETE {{Socialite_HostAddress}}/api/v1/posts/{{PostId}}
 
-### Like a Post by ID
-POST {{Socialite_HostAddress}}/api/v1/posts/123/like
+### Get Posts by User
+GET {{Socialite_HostAddress}}/api/v1/posts/user/{{UserId}}
+
+### Get Posts by User (with pagination)
+GET {{Socialite_HostAddress}}/api/v1/posts/user/{{UserId}}?skip=0&limit=10
+
+### Get Like Count for Post
+GET {{Socialite_HostAddress}}/api/v1/posts/{{PostId}}/likes/count
+
+### Check if Current User Liked Post
+GET {{Socialite_HostAddress}}/api/v1/posts/{{PostId}}/likes/me?userId={{UserId}}
+
+### Like a Post
+POST {{Socialite_HostAddress}}/api/v1/posts/{{PostId}}/likes?userId={{UserId}}
+
+### Unlike a Post
+DELETE {{Socialite_HostAddress}}/api/v1/posts/{{PostId}}/likes?userId={{UserId}}
 
 ### Get All Users
 GET {{Socialite_HostAddress}}/api/v1/users
 
 ### Get User by ID
-GET {{Socialite_HostAddress}}/api/v1/users/123
+GET {{Socialite_HostAddress}}/api/v1/users/{{UserId}}
 
 ### Update User by ID
-PUT {{Socialite_HostAddress}}/api/v1/users/123
+PUT {{Socialite_HostAddress}}/api/v1/users/{{UserId}}
 Content-Type: application/json
 
 {
   "username": "updatedUser",
+  "name": "Updated Name",
+  "bio": "Updated bio",
   "email": "updated@example.com"
 }
 
-### User Login
-POST {{Socialite_HostAddress}}/api/v1/auth/login
-Content-Type: application/json
-
-{
-  "username": "testuser",
-  "password": "Password123!"
-}
-
-### User Register
-POST {{Socialite_HostAddress}}/api/v1/auth/register
-Content-Type: application/json
-
-{
-  "username": "newuser",
-  "email": "newuser@example.com",
-  "password": "NewPassword123!"
-}
+### Delete User by ID
+DELETE {{Socialite_HostAddress}}/api/v1/users/{{UserId}}

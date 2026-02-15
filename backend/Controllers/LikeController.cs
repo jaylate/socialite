@@ -7,22 +7,28 @@ namespace Socialite.Controllers;
 [Route("api/v1/posts/{postId}/likes")]
 public class LikeController : ControllerBase
 {
-    [HttpGet("count")]
-    public ActionResult<int> GetCount(int postId)
+    private readonly LikeService _likeService;
+    public LikeController(LikeService likeService)
     {
-        return LikeService.GetCount(postId);
+        _likeService = likeService;
+    }
+
+    [HttpGet("count")]
+    public async Task<ActionResult<int>> GetCount(int postId)
+    {
+        return await _likeService.GetCountAsync(postId);
     }
 
     [HttpGet("me")]
-    public ActionResult<bool> IsLiked(int postId, [FromQuery] int userId)
+    public async Task<ActionResult<bool>> IsLiked(int postId, [FromQuery] int userId)
     {
-        return LikeService.IsLiked(userId, postId);
+        return await _likeService.IsLikedAsync(userId, postId);
     }
     
     [HttpPost]
-    public IActionResult Like(int postId, [FromQuery] int userId)
+    public async Task<IActionResult> Like(int postId, [FromQuery] int userId)
     {
-        var like = LikeService.Add(userId, postId);
+        var like = await _likeService.AddAsync(userId, postId);
 
         if (like is null)
             return Conflict("Post already liked by this user");
@@ -31,9 +37,9 @@ public class LikeController : ControllerBase
     }
 
     [HttpDelete]
-    public IActionResult Unlike(int postId, [FromQuery] int userId)
+    public async Task<IActionResult> Unlike(int postId, [FromQuery] int userId)
     {
-        var removed = LikeService.Delete(userId, postId);
+        var removed = await _likeService.DeleteAsync(userId, postId);
 
         if (!removed)
             return NotFound();

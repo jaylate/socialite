@@ -9,17 +9,21 @@ namespace Socialite.Controllers;
 
 public class UserController : ControllerBase
 {
-    [HttpGet]
-    public ActionResult<List<UserDto>> GetAll()
+    private readonly UserService _userService;
+    public UserController(UserService userService)
     {
-        var users = UserService.GetAll()
-            .Select(u => new UserDto(
+        _userService = userService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<PublicUserDto>>> GetAll()
+    {
+        var users = (await _userService.GetAllAsync())
+            .Select(u => new PublicUserDto(
                 u.Id,
                 u.Username,
                 u.Name,
-                u.Email,
                 u.Bio,
-                u.IsAdmin,
                 u.CreatedAt
             ))
             .ToList();
@@ -28,27 +32,25 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<UserDto> Get(int id)
+    public async Task<ActionResult<PublicUserDto>> Get(int id)
     {
-        var user = UserService.Get(id);
+        var user = await _userService.GetByIdAsync(id);
         if (user is null)
             return NotFound();
 
-        return new UserDto(
+        return new PublicUserDto(
             user.Id,
             user.Username,
             user.Name,
-            user.Email,
             user.Bio,
-            user.IsAdmin,
             user.CreatedAt
         );
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, UpdateUserDto dto)
+    public async Task<IActionResult> Update(int id, UpdateUserDto dto)
     {
-        var updated = UserService.Update(id, dto.Username, dto.Name, dto.Bio);
+        var updated = await _userService.UpdateAsync(id, dto.Username, dto.Name, dto.Bio, dto.Email);
         if (!updated)
             return NotFound();
 
@@ -56,12 +58,10 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var user = UserService.Get(id);
-        if (user is null)
+        if (!await _userService.DeleteAsync(id))
             return NotFound();
-        UserService.Delete(id);
         return NoContent();
     }
 }
