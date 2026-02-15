@@ -6,9 +6,9 @@ export default function Header() {
       <div className="">
         <nav aria-label="Global" className="flex items-center justify-between pt-6 lg:px-8">
           <div className="flex lg:flex-1">
-            <a className="-m-1.5 p-1.5">
-              <span className="text-3xl font-bold dark:text-white">Feed</span>
-            </a>
+            <Link href="/" className="-m-1.5 p-1.5">
+              <span className="text-3xl font-bold dark:text-white">Socialite</span>
+            </Link>
           </div>
           <div className="">
             <Link href="/login" className="bg-neutral-800 dark:bg-neutral-600 text-white font-bold rounded-full py-3 px-7 mx-6">Login</Link>
@@ -19,4 +19,4 @@ export default function Header() {
       </div>
     </header>
   );
-};
+}

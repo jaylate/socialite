@@ -32,7 +32,7 @@ export default function Login() {
   }
 
   try {
-    const response = await fetch(`${process.env.baseUrl}/api/v1/auth/login`, {
+    const response = await fetch('/api/v1/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -118,7 +118,7 @@ export default function Login() {
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link href="/register" className="text-blue-600 hover:underline font-medium">
             Sign up
           </Link>

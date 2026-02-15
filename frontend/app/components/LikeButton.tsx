@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-const LikeButton = ({ id, isLikedByCurrentUser: initialLiked, setLikesCount }) => {
+export default function LikeButton ({ id, isLikedByCurrentUser: initialLiked, setLikesCount }) {
   const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(initialLiked);
 
   const handleLike = async () => {
@@ -51,30 +51,4 @@ const LikeButton = ({ id, isLikedByCurrentUser: initialLiked, setLikesCount }) =
       </svg>
     </button>
   );
-};
-
-export default function Post({ id, content, authorName, authorUsername, likesCount: initialLikesCount, isLikedByCurrentUser }) {
-  const [likesCount, setLikesCount] = useState(initialLikesCount);
-
-  return (
-    <div className="flex-col">
-      <div className="flex">
-        <span className="font-bold text-xl py-1 dark:text-neutral-100">{authorName}</span>
-        <span className="text-gray-600 text-md ml-4 py-1.5 dark:text-neutral-300">@{authorUsername}</span>
-      </div>
-      <div className="my-1 mb-3 px-2 text-[18px] dark:text-neutral-300">{content}</div>
-      <div className="flex">
-        <div className="flex">
-          <div className="py-1">
-	    <LikeButton
-	      id={id}
-	      isLikedByCurrentUser={isLikedByCurrentUser}
-	      setLikesCount={setLikesCount}
-	    />
-          </div>
-          <span className="ml-2 text-gray-600 dark:text-neutral-200 py-0.5">{likesCount}</span>
-        </div>
-      </div>
-    </div>
-  );
-};
+}
