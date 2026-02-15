@@ -2,30 +2,31 @@
 
 import { useState, useEffect } from 'react';
 
-const LikeButton = ({ id, isLikedByCurrentUser: initialLiked }) => {
+const LikeButton = ({ id, isLikedByCurrentUser: initialLiked, setLikesCount }) => {
   const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(initialLiked);
 
-  useEffect(() => {
-    setIsLikedByCurrentUser(initialLiked);
-  }, [initialLiked]);
-
   const handleLike = async () => {
+    const previousLikeState = isLikedByCurrentUser;
+
+    setIsLikedByCurrentUser(!isLikedByCurrentUser);
     try {
-      /*const response = await fetch(`${process.env.baseUrl}/api/v1/posts/${id}/likes`, {
-        method: "POST",
+      const response = await fetch(`/api/v1/posts/${id}/likes?userId=1`, {
+        method: previousLikeState ? 'DELETE' : 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: 1 })
       });
-      if (response.ok) {
-        setIsLikedByCurrentUser(!isLikedByCurrentUser);
-      } else {
-        console.error("Failed to update like status");
-      }*/
-      setIsLikedByCurrentUser(!isLikedByCurrentUser);
+      if (!response.ok) {
+	throw new Error(`Failed to update like status`);
+      }
+
+      const likesCountResponse = await fetch(`/api/v1/posts/${id}/likes/count`);
+      if (likesCountResponse.ok) {
+        setLikesCount(parseInt(await likesCountResponse.text()));
+      }
     } catch (err) {
-      console.error("Error updating like status:", err);
+      setIsLikedByCurrentUser(previousLikeState);
+      console.error(`Error updating like status for post ${id}:`, err);
     }
   };
 
@@ -52,7 +53,9 @@ const LikeButton = ({ id, isLikedByCurrentUser: initialLiked }) => {
   );
 };
 
-export default function Post({ id, content, authorName, authorUsername, likesCount, isLikedByCurrentUser }) {
+export default function Post({ id, content, authorName, authorUsername, likesCount: initialLikesCount, isLikedByCurrentUser }) {
+  const [likesCount, setLikesCount] = useState(initialLikesCount);
+
   return (
     <div className="flex-col">
       <div className="flex">
@@ -63,7 +66,11 @@ export default function Post({ id, content, authorName, authorUsername, likesCou
       <div className="flex">
         <div className="flex">
           <div className="py-1">
-	    <LikeButton id={id} isLikedByCurrentUser={isLikedByCurrentUser} />
+	    <LikeButton
+	      id={id}
+	      isLikedByCurrentUser={isLikedByCurrentUser}
+	      setLikesCount={setLikesCount}
+	    />
           </div>
           <span className="ml-2 text-gray-600 dark:text-neutral-200 py-0.5">{likesCount}</span>
         </div>

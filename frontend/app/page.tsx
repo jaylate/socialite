@@ -4,7 +4,7 @@ import Post from './Post.tsx';
 export default function Feed() {
   const fetchPosts = async () => {
     try {
-      const postsResponse = await fetch(`${process.env.baseUrl}/api/v1/posts`);
+      const postsResponse = await fetch(`${process.env.baseUrl}/api/v1/posts?userId=1`);
       if (!postsResponse.ok) {
         throw new Error(`HTTP error when fetching posts: ${postsResponse.status}`);
       }
