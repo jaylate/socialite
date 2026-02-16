@@ -6,8 +6,12 @@ import { PageLayout, MainLayout } from '@/components/layout';
 import { Button, Card, FormField, Input } from '@/components/ui';
 import { authService } from '@/lib/api';
 import { InlineError } from '@/components/error';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -51,6 +55,7 @@ export default function Login() {
       setSubmitError('Login failed. Please check your credentials and try again.');
     } finally {
       setIsLoading(false);
+      router.replace('/');
     }
   };
 
