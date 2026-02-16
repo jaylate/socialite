@@ -1,7 +1,7 @@
 'use client';
 
 import LikeButton from './LikeButton';
-import type { Post } from '../types/post';
+import type { Post } from '@/lib/types';
 import { useState } from 'react';
 
 export default function Post({

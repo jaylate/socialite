@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { authService } from '@/lib/api';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -57,24 +58,11 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch('/api/v1/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-        }),
+      const data = await authService.register({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(data || 'Registration failed');
-        return;
-      }
 
       console.log('Registered user:', data);
 
@@ -82,7 +70,7 @@ export default function Register() {
       router.replace('/login');
     } catch (error) {
       console.error(error);
-      alert('Server is not responding');
+      alert('Registration failed');
     }
   };
 

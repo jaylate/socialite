@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import type { LikeButtonProps } from '../types/components';
+import { postService } from '@/lib/api';
+import type { LikeButtonProps } from '@/lib/types';
 
 export default function LikeButton({
   id,
@@ -15,20 +16,9 @@ export default function LikeButton({
 
     setIsLikedByCurrentUser(!isLikedByCurrentUser);
     try {
-      const response = await fetch(`/api/v1/posts/${id}/likes?userId=1`, {
-        method: previousLikeState ? 'DELETE' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to update like status`);
-      }
+      await postService.likePostId(previousLikeState, id);
 
-      const likesCountResponse = await fetch(`/api/v1/posts/${id}/likes/count`);
-      if (likesCountResponse.ok) {
-        setLikesCount(parseInt(await likesCountResponse.text()));
-      }
+      setLikesCount(await postService.getLikesForPostId(id));
     } catch (err) {
       setIsLikedByCurrentUser(previousLikeState);
       console.error(`Error updating like status for post ${id}:`, err);

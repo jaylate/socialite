@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { authService } from '@/lib/api';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -32,23 +33,10 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch('/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password,
-        }),
+      const data = await authService.login({
+        username: formData.username,
+        password: formData.password,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(data.message ?? 'Login failed');
-        return;
-      }
 
       console.log('Logged in user:', data);
 
@@ -56,7 +44,7 @@ export default function Login() {
       //TODO redirect to home page
     } catch (error) {
       console.error(error);
-      alert('Server is not responding');
+      alert('Login failed');
     }
   };
 
