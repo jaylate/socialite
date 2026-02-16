@@ -1,0 +1,74 @@
+# Root EditorConfig file
+root = true
+
+# ============================
+# Global Defaults
+# ============================
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# ============================
+# Frontend: TypeScript/TSX/JS/JSX
+# ============================
+[*.{ts,tsx,js,jsx,mjs,cjs}]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+quote_type = single
+
+# JSON files
+[*.{json,jsonc}]
+indent_style = space
+indent_size = 2
+
+# CSS/SCSS/PostCSS
+[*.{css,scss,pcss}]
+indent_style = space
+indent_size = 2
+
+# ============================
+# Backend: C# / .NET
+# ============================
+[*.{cs,cshtml,razor}]
+indent_style = space
+indent_size = 4
+
+# C# Naming Conventions (following Microsoft's style)
+[*.cs]
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
+dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
+dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
+
+dotnet_naming_symbols.interface.applicable_kinds = interface
+dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.interface.required_modifiers =
+
+dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+# C# Code Style
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# ============================
+# Config/Markdown
+# ============================
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# ============================
+# XML (csproj, props, etc.)
+# ============================
+[*.{xml,csproj,props,targets}]
+indent_style = space
+indent_size = 2

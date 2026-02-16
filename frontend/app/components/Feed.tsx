@@ -1,5 +1,5 @@
-import Post from './Post';
-import type { Post } from '@/types';
+import PostComponent from './Post';
+import type { Post as PostType } from '../types/post';
 
 export default async function Feed() {
   try {
@@ -8,19 +8,17 @@ export default async function Feed() {
       throw new Error(`HTTP error when fetching posts: ${postsResponse.status}`);
     }
 
-    const posts: Post[] = await postsResponse.json();
+    const posts: PostType[] = await postsResponse.json();
 
     return (
-      <div className="flex-col mt-10 space-y-5">
-        {posts.map(post => (
-            <Post key={post.id} {...post} />
-	))};
+      <div className="mt-10 flex-col space-y-5">
+        {posts.map((post) => (
+          <PostComponent key={post.id} {...post} />
+        ))}
       </div>
     );
   } catch (error) {
-    console.error("Failed to fetch posts:", error);
-    return (
-      <div>Error loading posts</div>
-    );
+    console.error('Failed to fetch posts:', error);
+    return <div>Error loading posts</div>;
   }
 }

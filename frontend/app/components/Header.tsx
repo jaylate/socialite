@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 export default function Header() {
   return (
@@ -11,11 +11,21 @@ export default function Header() {
             </Link>
           </div>
           <div className="">
-            <Link href="/login" className="bg-neutral-800 dark:bg-neutral-600 text-white font-bold rounded-full py-3 px-7 mx-6">Login</Link>
-            <Link href="/register" className="bg-neutral-800 dark:bg-neutral-600 text-white font-bold rounded-full py-3 px-7">Sign up</Link>
+            <Link
+              href="/login"
+              className="mx-6 rounded-full bg-neutral-800 px-7 py-3 font-bold text-white dark:bg-neutral-600"
+            >
+              Login
+            </Link>
+            <Link
+              href="/register"
+              className="rounded-full bg-neutral-800 px-7 py-3 font-bold text-white dark:bg-neutral-600"
+            >
+              Sign up
+            </Link>
           </div>
         </nav>
-        <hr className="h-px my-8 bg-gray-200 dark:bg-neutral-700 border-0"/>
+        <hr className="my-8 h-px border-0 bg-gray-200 dark:bg-neutral-700" />
       </div>
     </header>
   );

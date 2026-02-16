@@ -1,8 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import type { LikeButtonProps } from '../types/components';
 
-export default function LikeButton ({ id, isLikedByCurrentUser: initialLiked, setLikesCount }) {
+export default function LikeButton({
+  id,
+  isLikedByCurrentUser: initialLiked,
+  setLikesCount,
+}: LikeButtonProps) {
   const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(initialLiked);
 
   const handleLike = async () => {
@@ -17,7 +22,7 @@ export default function LikeButton ({ id, isLikedByCurrentUser: initialLiked, se
         },
       });
       if (!response.ok) {
-	throw new Error(`Failed to update like status`);
+        throw new Error(`Failed to update like status`);
       }
 
       const likesCountResponse = await fetch(`/api/v1/posts/${id}/likes/count`);
@@ -38,7 +43,7 @@ export default function LikeButton ({ id, isLikedByCurrentUser: initialLiked, se
         xmlns="http://www.w3.org/2000/svg"
         width="20"
         height="20"
-        fill={isLikedByCurrentUser ? "currentColor" : "none"}
+        fill={isLikedByCurrentUser ? 'currentColor' : 'none'}
         viewBox="0 0 24 24"
       >
         <path
