@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Socialite.Services;
 using Socialite.DTOs;
@@ -6,7 +7,7 @@ namespace Socialite.Controllers;
 
 [ApiController]
 [Route("api/v1/users")]
-
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
