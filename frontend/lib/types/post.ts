@@ -6,3 +6,7 @@ export interface Post {
   likesCount: number;
   isLikedByCurrentUser: boolean;
 }
+
+export interface CreatePostRequest {
+  content: string;
+}

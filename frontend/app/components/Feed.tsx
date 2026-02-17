@@ -6,7 +6,7 @@ export default async function Feed() {
   let posts: PostType[];
 
   try {
-    posts = await postService.getAll();
+    posts = await postService.getAll(undefined, { next: { tags: ['posts'] } } as RequestInit);
   } catch (error) {
     console.error('Failed to fetch posts:', error);
     return <div>Error loading posts</div>;
