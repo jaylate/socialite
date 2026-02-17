@@ -1,5 +1,5 @@
-export interface LikeButtonProps {
-  id: number;
+export type LikeSectionProps = {
+  postId: number;
+  likesCount: number;
   isLikedByCurrentUser: boolean;
-  setLikesCount: React.Dispatch<React.SetStateAction<number>>;
-}
+};

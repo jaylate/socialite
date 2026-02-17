@@ -1,9 +1,9 @@
 import { postService } from '@/lib/api';
-import PostComponent from './Post';
-import type { Post as PostType } from '@/lib/types';
+import PostCard from './PostCard';
+import type { Post } from '@/lib/types';
 
 export default async function Feed() {
-  let posts: PostType[];
+  let posts: Post[];
 
   try {
     posts = await postService.getAll(undefined, { next: { tags: ['posts'] } } as RequestInit);
@@ -15,7 +15,7 @@ export default async function Feed() {
   return (
     <div className="mt-10 flex-col space-y-5">
       {posts.map((post) => (
-        <PostComponent key={post.id} {...post} />
+        <PostCard key={post.id} {...post} />
       ))}
     </div>
   );
