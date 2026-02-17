@@ -63,7 +63,7 @@ public class PostController : ControllerBase
     public async Task<IActionResult> Create([FromQuery] int userId, CreatePostDto dto)
     {
         await _postService.AddAsync(userId, dto.Content);
-        return Ok();
+        return Created();
     }
     
     [HttpPut("{id}")]
