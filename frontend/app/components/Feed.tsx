@@ -15,7 +15,9 @@ export default async function Feed() {
   return (
     <div className="mt-10 flex-col space-y-5">
       {posts.map((post) => (
-        <PostCard key={post.id} {...post} />
+        <div key={post.id} className="animate-fade-in-up">
+          <PostCard {...post} />
+        </div>
       ))}
     </div>
   );
