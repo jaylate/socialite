@@ -1,6 +1,6 @@
 'use client';
 
-import { createPost } from '../actions';
+import { createPost } from '@/lib/actions/post';
 import { useState, FormEvent } from 'react';
 
 export default function CreatePost() {

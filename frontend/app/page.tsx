@@ -1,7 +1,7 @@
-import Header from './components/Header';
-import CreatePost from './components/CreatePost';
-import Feed from './components/Feed';
-import FeedSkeleton from './components/FeedSkeleton';
+import Header from '@/components/layout/Header';
+import CreatePost from '@/components/post/CreatePost';
+import Feed from '@/components/post/Feed';
+import FeedSkeleton from '@/components/post/FeedSkeleton';
 import { Suspense } from 'react';
 
 export default function Home() {
