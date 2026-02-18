@@ -3,6 +3,7 @@
 import LikeSection from './LikeSection';
 import type { Post } from '@/lib/types';
 import Link from 'next/link';
+import { formatDistanceToNow } from 'date-fns';
 
 export default function PostCard({
   id,
@@ -25,9 +26,9 @@ export default function PostCard({
             @{authorUsername}
           </Link>
         )}
-        <span className="text-neutral-500 dark:text-neutral-400">
-          {new Date(createdAt).toLocaleDateString('en-US', { dateStyle: 'medium' })}
-        </span>
+        <time dateTime={createdAt} className="text-neutral-500 dark:text-neutral-400">
+          {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
+        </time>
       </header>
       <Link
         href={`/post/${id}`}
