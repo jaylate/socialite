@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { authService } from '@/lib/api';
+import { InlineError } from '@/components/error';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ export default function Login() {
     password: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -19,10 +21,14 @@ export default function Login() {
     if (errors[e.target.name]) {
       setErrors({ ...errors, [e.target.name]: '' });
     }
+    if (submitError) {
+      setSubmitError('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
 
     if (!formData.username || !formData.password) {
       setErrors({
@@ -33,18 +39,12 @@ export default function Login() {
     }
 
     try {
-      const data = await authService.login({
+      await authService.login({
         username: formData.username,
         password: formData.password,
       });
-
-      console.log('Logged in user:', data);
-
-      alert('Logged in successfully');
-      //TODO redirect to home page
-    } catch (error) {
-      console.error(error);
-      alert('Login failed');
+    } catch {
+      setSubmitError('Login failed. Please check your credentials and try again.');
     }
   };
 
@@ -91,6 +91,8 @@ export default function Login() {
             />
             {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
           </div>
+
+          <InlineError message={submitError} />
 
           <button
             type="submit"

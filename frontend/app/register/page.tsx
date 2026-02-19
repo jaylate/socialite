@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authService } from '@/lib/api';
+import { InlineError } from '@/components/error';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ export default function Register() {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -21,6 +23,9 @@ export default function Register() {
     });
     if (errors[e.target.name]) {
       setErrors({ ...errors, [e.target.name]: '' });
+    }
+    if (submitError) {
+      setSubmitError('');
     }
   };
 
@@ -52,25 +57,21 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
 
     if (!validateForm()) {
       return;
     }
 
     try {
-      const data = await authService.register({
+      await authService.register({
         username: formData.username,
         email: formData.email,
         password: formData.password,
       });
-
-      console.log('Registered user:', data);
-
-      alert('Registration successful');
       router.replace('/login');
-    } catch (error) {
-      console.error(error);
-      alert('Registration failed');
+    } catch {
+      setSubmitError('Registration failed. Please try again.');
     }
   };
 
@@ -159,6 +160,8 @@ export default function Register() {
               <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
             )}
           </div>
+
+          <InlineError message={submitError} />
 
           <button
             type="submit"

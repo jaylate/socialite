@@ -5,9 +5,9 @@ import { revalidateTag } from 'next/cache';
 
 export async function createPost(formData: FormData) {
   const content = formData.get('content');
-  if (!content) {
+  if (!content || typeof content !== 'string') {
     throw new Error('Content is required');
   }
-  await postService.addPost({ content: content as string });
+  await postService.addPost({ content });
   revalidateTag('posts', 'max');
 }

@@ -5,8 +5,3 @@ export interface ApiConfig {
   defaultUserId: number;
   getApiUrl: (endpoint: string) => string;
 }
-
-export interface ApiError {
-  status: number;
-  text: string;
-}

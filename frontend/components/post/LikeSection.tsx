@@ -12,19 +12,28 @@ export default function LikeSection({
   const [likesCount, setLikesCount] = useState(initialLikesCount);
   const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(initialLiked);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const handleLike = async () => {
+    if (isLoading) return;
     setIsLoading(true);
+    setHasError(false);
     const previousLikeState = isLikedByCurrentUser;
     setIsLikedByCurrentUser(!isLikedByCurrentUser);
 
     try {
       await postService.likePostId(previousLikeState, postId);
-
+      // FIXME: If getLikesForPostId fails after likePostId succeeds,
+      // the like exists, on the server but UI reverts to previous state.
+      // Should be fixed when backend will return information
+      // about like operation either by just reporting success or likes count too
       setLikesCount(await postService.getLikesForPostId(postId));
-    } catch (err) {
-      setIsLikedByCurrentUser(previousLikeState);
-      console.error(`Error updating like status for post ${postId}:`, err);
+    } catch {
+      setHasError(true);
+      setTimeout(() => {
+        setHasError(false);
+        setIsLikedByCurrentUser(previousLikeState);
+      }, 1000);
     } finally {
       setIsLoading(false);
     }
@@ -35,14 +44,13 @@ export default function LikeSection({
       <button
         type="button"
         onClick={handleLike}
-        className="cursor-pointer disabled:opacity-50"
-        disabled={isLoading}
+        className={`cursor-pointer disabled:opacity-50 ${hasError ? 'animate-shake' : ''} text-gray-800 dark:text-white`}
+        disabled={isLoading || hasError}
         aria-label={isLikedByCurrentUser ? 'Unlike post' : 'Like post'}
         aria-pressed={isLikedByCurrentUser}
-        aria-busy={isLoading}
+        aria-busy={isLoading || hasError}
       >
         <svg
-          className="text-gray-800 dark:text-white"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           width="20"
