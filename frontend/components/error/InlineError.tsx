@@ -5,7 +5,7 @@ export function InlineError({ message, className = '' }: InlineErrorProps) {
 
   return (
     <div
-      className={`rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200 ${className}`}
+      className={`border-error bg-error text-error rounded-lg border p-3 text-sm ${className}`}
       role="alert"
     >
       {message}

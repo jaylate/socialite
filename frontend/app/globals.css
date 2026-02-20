@@ -1,10 +1,374 @@
 @import 'tailwindcss';
 
 @theme {
+  /* Backgrounds - light theme */
+  --color-bg-page: var(--color-neutral-100);
+  --color-bg-surface: var(--color-white);
+  --color-bg-input: var(--color-neutral-100);
+  --color-bg-button: var(--color-neutral-950);
+  --color-bg-button-light: var(--color-neutral-700);
+  --color-bg-skeleton: var(--color-neutral-200);
+
+  /* Backgrounds - dark theme */
+  --color-bg-page-dark: var(--color-neutral-800);
+  --color-bg-surface-dark: var(--color-neutral-800);
+  --color-bg-input-dark: var(--color-neutral-200);
+  --color-bg-button-dark: var(--color-neutral-600);
+  --color-bg-button-light-dark: var(--color-neutral-400);
+  --color-bg-skeleton-dark: var(--color-neutral-700);
+
+  /* Text - light theme */
+  --color-text-primary: var(--color-neutral-800);
+  --color-text-secondary: var(--color-neutral-600);
+  --color-text-muted: var(--color-neutral-500);
+  --color-text-inverse: var(--color-neutral-200);
+  --color-text-label: var(--color-neutral-700);
+  --color-text-placeholder: var(--color-neutral-400);
+
+  /* Text - dark theme */
+  --color-text-primary-dark: var(--color-neutral-100);
+  --color-text-secondary-dark: var(--color-neutral-300);
+  --color-text-muted-dark: var(--color-neutral-400);
+  --color-text-inverse-dark: var(--color-white);
+  --color-text-label-dark: var(--color-neutral-200);
+  --color-text-placeholder-dark: var(--color-neutral-500);
+
+  /* Borders - light theme */
+  --color-border-default: var(--color-neutral-200);
+  --color-border-divider: var(--color-neutral-200);
+  --color-border-card: var(--color-neutral-600);
+  --color-border-input: var(--color-neutral-300);
+
+  /* Borders - dark theme */
+  --color-border-default-dark: var(--color-neutral-400);
+  --color-border-divider-dark: var(--color-neutral-700);
+  --color-border-card-dark: var(--color-neutral-600);
+  --color-border-input-dark: var(--color-neutral-600);
+
+  /* Error - light theme */
+  --color-error-bg: var(--color-red-50);
+  --color-error-border: var(--color-red-200);
+  --color-error-text: var(--color-red-800);
+
+  /* Error - dark theme */
+  --color-error-bg-dark: var(--color-red-950);
+  --color-error-border-dark: var(--color-red-800);
+  --color-error-text-dark: var(--color-red-200);
+
+  /* Error input - light theme */
+  --color-error-input: var(--color-red-500);
+
+  /* Animations */
   --animate-fade-in-up: fadeInUp 0.6s ease-in-out forwards;
   --animate-shake: shake 0.5s ease-in-out;
 }
 
+@utility bg-page {
+  background-color: var(--color-bg-page);
+  @variant dark {
+    background-color: var(--color-bg-page-dark);
+  }
+}
+
+@utility bg-surface {
+  background-color: var(--color-bg-surface);
+  @variant dark {
+    background-color: var(--color-bg-surface-dark);
+  }
+}
+
+@utility bg-input {
+  background-color: var(--color-bg-input);
+  @variant dark {
+    background-color: var(--color-bg-input-dark);
+  }
+}
+
+@utility bg-button {
+  background-color: var(--color-bg-button);
+  @variant dark {
+    background-color: var(--color-bg-button-dark);
+  }
+}
+
+@utility bg-button-light {
+  background-color: var(--color-bg-button-light);
+  @variant dark {
+    background-color: var(--color-bg-button-light-dark);
+  }
+}
+
+@utility bg-skeleton {
+  background-color: var(--color-bg-skeleton);
+  @variant dark {
+    background-color: var(--color-bg-skeleton-dark);
+  }
+}
+
+@utility bg-divider {
+  background-color: var(--color-border-divider);
+  @variant dark {
+    background-color: var(--color-border-divider-dark);
+  }
+}
+
+@utility text-primary {
+  color: var(--color-text-primary);
+  @variant dark {
+    color: var(--color-text-primary-dark);
+  }
+}
+
+@utility text-secondary {
+  color: var(--color-text-secondary);
+  @variant dark {
+    color: var(--color-text-secondary-dark);
+  }
+}
+
+@utility text-muted {
+  color: var(--color-text-muted);
+  @variant dark {
+    color: var(--color-text-muted-dark);
+  }
+}
+
+@utility text-inverse {
+  color: var(--color-text-inverse);
+  @variant dark {
+    color: var(--color-text-inverse-dark);
+  }
+}
+
+@utility text-label {
+  color: var(--color-text-label);
+  @variant dark {
+    color: var(--color-text-label-dark);
+  }
+}
+
+@utility text-placeholder {
+  color: var(--color-text-placeholder);
+  @variant dark {
+    color: var(--color-text-placeholder-dark);
+  }
+}
+
+@utility border-default {
+  border-color: var(--color-border-default);
+  @variant dark {
+    border-color: var(--color-border-default-dark);
+  }
+}
+
+@utility border-input {
+  border-color: var(--color-border-input);
+  @variant dark {
+    border-color: var(--color-border-input-dark);
+  }
+}
+
+@utility border-card {
+  border-color: var(--color-border-card);
+  @variant dark {
+    border-color: var(--color-border-card-dark);
+  }
+}
+
+/* Layout utilities */
+@utility layout-page {
+  @apply mx-auto max-w-7xl;
+}
+
+@utility layout-content {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+@utility layout-main-content {
+  @apply px-8 sm:px-12 lg:px-24;
+}
+
+@utility layout-header {
+  @apply px-8 pt-6;
+}
+
+@utility layout-nav {
+  @apply flex items-center justify-between;
+}
+
+@utility layout-feed {
+  @apply mt-10 flex-col space-y-5;
+}
+
+@utility layout-post-card {
+  @apply flex flex-col gap-2;
+}
+
+@utility layout-post-header {
+  @apply flex items-center gap-4;
+}
+
+/* Button utilities */
+@utility btn {
+  @apply cursor-pointer font-bold transition-colors;
+}
+
+@utility btn-rounded {
+  @apply rounded-full px-7 py-3;
+}
+
+@utility btn-rectangular {
+  @apply rounded-lg px-6 py-3;
+}
+
+@utility btn-primary {
+  @apply btn btn-rounded bg-button text-inverse;
+  &:hover {
+    background-color: var(--color-bg-button-light);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    &:hover {
+      background-color: var(--color-bg-button);
+    }
+  }
+  @variant dark {
+    background-color: var(--color-bg-button-dark);
+    color: var(--color-text-inverse-dark);
+    &:hover {
+      background-color: var(--color-bg-button-light-dark);
+    }
+    &:disabled:hover {
+      background-color: var(--color-bg-button-dark);
+    }
+  }
+}
+
+@utility btn-card {
+  @apply btn btn-rectangular bg-button text-inverse w-full text-center;
+  &:hover {
+    background-color: var(--color-bg-button-light);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    &:hover {
+      background-color: var(--color-bg-button);
+    }
+  }
+  @variant dark {
+    background-color: var(--color-bg-button-dark);
+    color: var(--color-text-inverse-dark);
+    &:hover {
+      background-color: var(--color-bg-button-light-dark);
+    }
+    &:disabled:hover {
+      background-color: var(--color-bg-button-dark);
+    }
+  }
+}
+
+/* Input utilities */
+@utility input-field {
+  @apply border-input text-primary placeholder:text-placeholder w-full rounded-lg border px-4 py-2 outline-none;
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@utility textarea-field {
+  @apply flex-1 resize-none bg-transparent outline-none;
+}
+
+@utility form-label {
+  @apply border-default focus-within:border-default flex h-70 flex-col rounded-2xl border-2 px-4 pt-3 text-xl font-light tracking-wide shadow-xl focus-within:shadow-xl/20 focus-within:outline-none;
+  @variant dark {
+    background-color: var(--color-bg-input-dark);
+  }
+}
+
+@utility centered-container {
+  @apply flex min-h-[calc(100vh-180px)] items-center justify-center px-4 py-8;
+  background-color: var(--color-bg-page);
+  @variant dark {
+    background-color: var(--color-bg-page-dark);
+  }
+}
+
+/* Card/page utilities */
+@utility card {
+  @apply w-full max-w-md rounded-lg p-8 shadow-md;
+  background-color: var(--color-bg-surface);
+  @variant dark {
+    background-color: var(--color-bg-surface-dark);
+    border: 1px solid var(--color-border-card-dark);
+  }
+}
+
+@utility card-title {
+  @apply text-primary text-3xl font-bold;
+}
+
+@utility card-title-large {
+  @apply text-primary text-4xl font-bold;
+}
+
+@utility card-subtitle {
+  @apply text-secondary mt-2 text-xl;
+}
+
+@utility card-text {
+  @apply text-secondary;
+}
+
+@utility form-stack {
+  @apply flex flex-col gap-6;
+}
+
+@utility form-field {
+  @apply flex flex-col gap-2;
+}
+
+@utility form-label-text {
+  @apply text-label text-sm font-medium;
+}
+
+@utility form-input-error {
+  @apply border-error-input;
+}
+
+@utility form-error-text {
+  @apply text-error text-sm;
+}
+
+@utility bg-error {
+  background-color: var(--color-error-bg);
+  @variant dark {
+    background-color: var(--color-error-bg-dark);
+  }
+}
+
+@utility border-error {
+  border-color: var(--color-error-border);
+  @variant dark {
+    border-color: var(--color-error-border-dark);
+  }
+}
+
+@utility text-error {
+  color: var(--color-error-text);
+  @variant dark {
+    color: var(--color-error-text-dark);
+  }
+}
+
+@utility card-footer {
+  @apply text-secondary mt-6 text-center text-sm;
+}
+
+/* Animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;

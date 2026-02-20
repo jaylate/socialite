@@ -1,19 +1,17 @@
-import Header from '@/components/layout/Header';
+import { PageLayout, MainLayout } from '@/components/layout';
 import CreatePost from '@/components/post/CreatePost';
-import Feed from '@/components/post/Feed';
-import FeedSkeleton from '@/components/post/FeedSkeleton';
-import { Suspense } from 'react';
+import { FeedContainer } from '@/components/post/FeedContainer';
+import { postService } from '@/lib/api';
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-7xl">
-      <Header />
-      <div className="px-50">
-        <CreatePost />
-        <Suspense fallback={<FeedSkeleton />}>
-          <Feed />
-        </Suspense>
-      </div>
-    </div>
+    <PageLayout>
+      <MainLayout>
+        <div className="layout-main-content">
+          <CreatePost />
+          <FeedContainer fetchPosts={postService.getAll} />
+        </div>
+      </MainLayout>
+    </PageLayout>
   );
 }

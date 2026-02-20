@@ -44,7 +44,7 @@ export default function LikeSection({
       <button
         type="button"
         onClick={handleLike}
-        className={`cursor-pointer disabled:opacity-50 ${hasError ? 'animate-shake' : ''} text-gray-800 dark:text-white`}
+        className={`cursor-pointer disabled:opacity-50 ${hasError ? 'animate-shake' : ''} text-primary`}
         disabled={isLoading || hasError}
         aria-label={isLikedByCurrentUser ? 'Unlike post' : 'Like post'}
         aria-pressed={isLikedByCurrentUser}
@@ -67,10 +67,7 @@ export default function LikeSection({
           />
         </svg>
       </button>
-      <span
-        aria-label={`${likesCount} likes`}
-        className="py-0.5 text-gray-600 dark:text-neutral-200"
-      >
+      <span aria-label={`${likesCount} likes`} className="text-secondary py-0.5">
         {likesCount}
       </span>
     </section>
