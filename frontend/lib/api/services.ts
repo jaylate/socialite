@@ -1,7 +1,7 @@
 import { apiConfig } from './config';
 import fetchApi from './fetchApi';
 import { withErrorReporting } from '@/lib/errors';
-import type { Post, CreatePostRequest } from '@/lib/types';
+import type { User, Post, CreatePostRequest } from '@/lib/types';
 import type { LoginRequest, RegisterRequest, AuthResponse } from '@/lib/types';
 
 export const postService = {
@@ -17,6 +17,12 @@ export const postService = {
       'postService',
       'getById'
     ),
+  getByUserId: (userId: number = apiConfig.defaultUserId, options?: RequestInit) =>
+    withErrorReporting(
+      () => fetchApi<Post[]>(`/posts/user/${userId}?userId=${userId}`, options),
+      'postService',
+      'getByUserId'
+    ), // FIXME: Should be getByUsername
   getLikesForPostId: (
     postId: number,
     userId: number = apiConfig.defaultUserId,
@@ -57,6 +63,15 @@ export const postService = {
       'postService',
       'addPost'
     ),
+};
+
+export const userService = {
+  getInfo: (
+    // FIXME: should get username as parameter
+    userId: number = apiConfig.defaultUserId,
+    options?: RequestInit
+  ) =>
+    withErrorReporting(() => fetchApi<User>(`/users/${userId}`, options), 'userService', 'getInfo'),
 };
 
 export const authService = {
