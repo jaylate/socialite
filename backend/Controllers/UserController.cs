@@ -20,7 +20,6 @@ public class UserController : ControllerBase
     {
         var users = (await _userService.GetAllAsync())
             .Select(u => new PublicUserDto(
-                u.Id,
                 u.Username,
                 u.Name,
                 u.Bio,
@@ -31,15 +30,14 @@ public class UserController : ControllerBase
         return users;
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<PublicUserDto>> Get(int id)
+    [HttpGet("{username}")]
+    public async Task<ActionResult<PublicUserDto>> Get(string username)
     {
-        var user = await _userService.GetByIdAsync(id);
+        var user = await _userService.GetByUsernameAsync(username);
         if (user is null)
             return NotFound();
 
         return new PublicUserDto(
-            user.Id,
             user.Username,
             user.Name,
             user.Bio,
@@ -48,10 +46,10 @@ public class UserController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, UpdateUserDto dto)
+    [HttpPut("{username}")]
+    public async Task<IActionResult> Update(string username, UpdateUserDto dto)
     {
-        var updated = await _userService.UpdateAsync(id, dto.Username, dto.Name, dto.Bio, dto.Email);
+        var updated = await _userService.UpdateByUsernameAsync(username, dto.Username, dto.Name, dto.Bio, dto.Email);
         if (!updated)
             return NotFound();
 
@@ -59,10 +57,10 @@ public class UserController : ControllerBase
     }
 
     [Authorize]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{username}")]
+    public async Task<IActionResult> Delete(string username)
     {
-        if (!await _userService.DeleteAsync(id))
+        if (!await _userService.DeleteByUsernameAsync(username))
             return NotFound();
 
         return NoContent();

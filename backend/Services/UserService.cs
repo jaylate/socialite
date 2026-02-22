@@ -22,6 +22,11 @@ public class UserService
 	return await _userRepository.GetByIdAsync(id);
     }
 
+    public async Task<User?> GetByUsernameAsync(string username)
+    {
+	return await _userRepository.GetByUsernameAsync(username);
+    }
+
     public async Task<User> AddAsync(User user)
     {
         return await _userRepository.CreateAsync(user);
@@ -32,18 +37,39 @@ public class UserService
         User? user = await _userRepository.GetByIdAsync(id);
         if (user == null)
             return false;
-        
+
         user.Username = username;
-        
+
         if (name is not null)
             user.Name = name;
-    
+
         if (bio is not null)
             user.Bio = bio;
 
 	if (email is not null)
 	    user.Email = email;
-    
+
+        await _userRepository.UpdateAsync(user);
+        return true;
+    }
+
+    public async Task<bool> UpdateByUsernameAsync(string currentUsername, string newUsername, string? name, string? bio, string? email)
+    {
+        User? user = await _userRepository.GetByUsernameAsync(currentUsername);
+        if (user == null)
+            return false;
+
+        user.Username = newUsername;
+
+        if (name is not null)
+            user.Name = name;
+
+        if (bio is not null)
+            user.Bio = bio;
+
+        if (email is not null)
+            user.Email = email;
+
         await _userRepository.UpdateAsync(user);
         return true;
     }
@@ -52,8 +78,17 @@ public class UserService
     {
         if (!await _userRepository.ExistsAsync(id))
             return false;
-    
+
         await _userRepository.DeleteAsync(id);
+        return true;
+    }
+
+    public async Task<bool> DeleteByUsernameAsync(string username)
+    {
+        if (!await _userRepository.ExistsByUsernameAsync(username))
+            return false;
+
+        await _userRepository.DeleteByUsernameAsync(username);
         return true;
     }
 }

@@ -88,9 +88,26 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task DeleteByUsernameAsync(string username)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
+        if (user == null)
+        {
+            throw new InvalidOperationException($"User with username '{username}' not found");
+        }
+
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<bool> ExistsAsync(int id)
     {
         return await _context.Users.AnyAsync(u => u.Id == id);
+    }
+
+    public async Task<bool> ExistsByUsernameAsync(string username)
+    {
+        return await _context.Users.AnyAsync(u => u.Username.ToLower() == username.ToLower());
     }
 
     public async Task<bool> UsernameExistsAsync(string username)

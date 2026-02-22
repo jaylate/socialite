@@ -11,12 +11,15 @@ public class PostController : ControllerBase
 {
     private readonly PostService _postService;
     private readonly LikeService _likeService;
+    private readonly UserService _userService;
     public PostController(
 	PostService postService,
-	LikeService likeService)
+	LikeService likeService,
+	UserService userService)
     {
         _postService = postService;
         _likeService = likeService;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -95,14 +98,18 @@ public class PostController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("user/{userId}")]
+    [HttpGet("user/{username}")]
     public async Task<ActionResult<List<PostResponseDto>>> GetByUser(
-        int userId,
+        string username,
         [FromQuery] int? currentUserId,
         [FromQuery] int skip = 0,
         [FromQuery] int limit = 20)
     {
-        var posts = (await _postService.GetByUserIdAsync(userId))
+        var user = await _userService.GetByUsernameAsync(username);
+        if (user is null)
+            return NotFound();
+
+        var posts = (await _postService.GetByUserIdAsync(user.Id))
             .Skip(skip)
             .Take(limit)
             .Select(p => new PostResponseDto(
