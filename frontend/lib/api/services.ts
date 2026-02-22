@@ -95,4 +95,6 @@ export const authService = {
       'authService',
       'register'
     ),
+  me: () =>
+    fetchApi<{ userId: number; username: string; email: string }>('/auth/me'),
 };

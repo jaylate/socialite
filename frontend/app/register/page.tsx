@@ -7,6 +7,7 @@ import { PageLayout, MainLayout } from '@/components/layout';
 import { Button, Card, FormField, Input } from '@/components/ui';
 import { authService } from '@/lib/api';
 import { InlineError } from '@/components/error';
+import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ export default function Register() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const { register } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -68,12 +70,8 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      await authService.register({
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-      });
-      router.replace('/login');
+      await register(formData.username, formData.email, formData.password);
+      router.replace('/');
     } catch {
       setSubmitError('Registration failed. Please try again.');
     } finally {

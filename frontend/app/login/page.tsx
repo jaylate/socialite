@@ -4,14 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { PageLayout, MainLayout } from '@/components/layout';
 import { Button, Card, FormField, Input } from '@/components/ui';
-import { authService } from '@/lib/api';
 import { InlineError } from '@/components/error';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function Login() {
 
   const router = useRouter();
-
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -47,15 +47,12 @@ export default function Login() {
 
     setIsLoading(true);
     try {
-      await authService.login({
-        username: formData.username,
-        password: formData.password,
-      });
+      await login(formData.username, formData.password);
+      router.replace('/');
     } catch {
       setSubmitError('Login failed. Please check your credentials and try again.');
     } finally {
       setIsLoading(false);
-      router.replace('/');
     }
   };
 

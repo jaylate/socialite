@@ -6,8 +6,11 @@ import { useRouter } from 'next/navigation';
 import { InlineError } from '@/components/error';
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
+import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function CreatePost() {
+  const { user } = useAuth();
+  if (!user) return null;
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string>('');
