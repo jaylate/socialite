@@ -40,7 +40,8 @@ public class JwtService
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim(JwtRegisteredClaimNames.Name, request.Username)
+                new Claim(JwtRegisteredClaimNames.Name, request.Username),
+                new Claim(ClaimTypes.NameIdentifier, UserAccount.Id.ToString())
             }),
             Issuer = issuer,
             Expires = tokenExpiryTimeStamp,
@@ -55,10 +56,13 @@ public class JwtService
 
         return new AuthResponseDto
         {
-            Username = request.Username,
+            Username = UserAccount.Username,
+            UserId = UserAccount.Id,
+            Email = UserAccount.Email,
             AccessToken = accessToken,
             ExpiresIn = tokenValidityMins
         };
+
     }
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
@@ -98,7 +102,9 @@ public class JwtService
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim(JwtRegisteredClaimNames.Name, request.Username)
+                new Claim(JwtRegisteredClaimNames.Name, request.Username),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+
             }),
             Issuer = issuer,
             Expires = tokenExpiryTimeStamp,
@@ -113,9 +119,16 @@ public class JwtService
 
         return new AuthResponseDto
         {
-            Username = request.Username,
+            Username = user.Username,
+            UserId = user.Id,
+            Email = user.Email,
             AccessToken = accessToken,
             ExpiresIn = tokenValidityMins
         };
+    }
+
+    public async Task<User?> GetUserByIdAsync(int userId)
+    {
+        return await _context.Users.FindAsync(userId);
     }
 }

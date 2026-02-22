@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Socialite.Services;
 
@@ -24,26 +25,26 @@ public class LikeController : ControllerBase
     {
         return await _likeService.IsLikedAsync(userId, postId);
     }
-    
-    [HttpPost]
-    public async Task<IActionResult> Like(int postId, [FromQuery] int userId)
-    {
-        var like = await _likeService.AddAsync(userId, postId);
 
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Like(int postId)
+    {
+        var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+        var like = await _likeService.AddAsync(userId, postId);
         if (like is null)
             return Conflict("Post already liked by this user");
-
         return CreatedAtAction(nameof(IsLiked), new { postId, userId }, null);
     }
 
+    [Authorize]
     [HttpDelete]
-    public async Task<IActionResult> Unlike(int postId, [FromQuery] int userId)
+    public async Task<IActionResult> Unlike(int postId)
     {
+        var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
         var removed = await _likeService.DeleteAsync(userId, postId);
-
         if (!removed)
             return NotFound();
-
         return NoContent();
     }
 }

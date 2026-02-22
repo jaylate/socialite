@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Socialite.Services;
 using Socialite.DTOs.Posts;
 
@@ -59,13 +60,16 @@ public class PostController : ControllerBase
         );
     }
 
+    [Authorize]
     [HttpPost]
-    public async Task<IActionResult> Create([FromQuery] int userId, CreatePostDto dto)
+    public async Task<IActionResult> Create(CreatePostDto dto)
     {
+        var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
         await _postService.AddAsync(userId, dto.Content);
         return Created();
     }
-    
+
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdatePostDto dto)
     {
@@ -76,6 +80,7 @@ public class PostController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
