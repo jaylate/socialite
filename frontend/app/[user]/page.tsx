@@ -1,27 +1,30 @@
 import { PageLayout, MainLayout } from '@/components/layout';
 import UserInfoCard from '@/components/user/UserInfoCard';
 import FeedContainer from '@/components/post/FeedContainer';
+import type { User } from '@/lib/types';
 import { userService, postService } from '@/lib/api';
 import { notFound } from 'next/navigation';
 
 export default async function User({
-  params,
   searchParams,
 }: {
-  params: Promise<{ username: string }>;
-  searchParams: Promise<{ originalPath?: string }>;
+  searchParams: Promise<{ originalPath?: string; username?: string }>;
 }) {
-  const { originalPath } = await searchParams;
+  const { originalPath, username } = await searchParams;
   // Everything which wasn't matched by other routes and
   // is not a username can be reported as not found
-  if (!originalPath?.startsWith('/@')) {
+  if (!originalPath?.startsWith('/@') || !username) {
     notFound();
   }
 
-  const { username } = await params;
-  const userInfo = await userService.getInfo(1); // FIXME: Should get username as parameter
-  // TODO: If userInfo is null/errors/etc return notFound()
-  const getPostsByUser = () => postService.getByUserId(1); // FIXME: Should be getByUsername
+  let userInfo: User | null;
+  try {
+    userInfo = await userService.getInfo(username);
+  } catch {
+    notFound();
+  }
+
+  const getPostsByUser = () => postService.getByUser(username);
 
   return (
     <PageLayout>

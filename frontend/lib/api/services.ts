@@ -29,12 +29,12 @@ export const postService = {
       'postService',
       'getById'
     ),
-  getByUserId: (userId: number = apiConfig.defaultUserId, options?: RequestInit) =>
+  getByUser: (username: string, options?: RequestInit) =>
     withErrorReporting(
-      () => fetchApi<Post[]>(`/posts/user/${userId}?userId=${userId}`, options),
+      () => fetchApi<Post[]>(`/posts/user/${username}`, options),
       'postService',
-      'getByUserId'
-    ), // FIXME: Should be getByUsername
+      'getByUser'
+    ),
   getLikesForPostId: (
     postId: number,
     userId: number = apiConfig.defaultUserId,
@@ -78,12 +78,12 @@ export const postService = {
 };
 
 export const userService = {
-  getInfo: (
-    // FIXME: should get username as parameter
-    userId: number = apiConfig.defaultUserId,
-    options?: RequestInit
-  ) =>
-    withErrorReporting(() => fetchApi<User>(`/users/${userId}`, options), 'userService', 'getInfo'),
+  getInfo: (username: string, options?: RequestInit) =>
+    withErrorReporting(
+      () => fetchApi<User>(`/users/${username}`, options),
+      'userService',
+      'getInfo'
+    ),
 };
 
 export const authService = {
