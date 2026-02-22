@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { PageLayout, MainLayout } from '@/components/layout';
 import { Button, Card, FormField, Input } from '@/components/ui';
-import { authService } from '@/lib/api';
 import { InlineError } from '@/components/error';
 import { useAuth } from '@/lib/auth/AuthContext';
 

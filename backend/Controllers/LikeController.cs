@@ -20,9 +20,15 @@ public class LikeController : ControllerBase
         return await _likeService.GetCountAsync(postId);
     }
 
+    [Authorize]
     [HttpGet("me")]
-    public async Task<ActionResult<bool>> IsLiked(int postId, [FromQuery] int userId)
+    public async Task<ActionResult<bool>> IsLiked(int postId)
     {
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+            return Unauthorized();
+
+        var userId = int.Parse(userIdClaim.Value);
         return await _likeService.IsLikedAsync(userId, postId);
     }
 
@@ -30,18 +36,26 @@ public class LikeController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Like(int postId)
     {
-        var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+            return Unauthorized();
+
+        var userId = int.Parse(userIdClaim.Value);
         var like = await _likeService.AddAsync(userId, postId);
         if (like is null)
             return Conflict("Post already liked by this user");
-        return CreatedAtAction(nameof(IsLiked), new { postId, userId }, null);
+        return NoContent();
     }
 
     [Authorize]
     [HttpDelete]
     public async Task<IActionResult> Unlike(int postId)
     {
-        var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+            return Unauthorized();
+
+        var userId = int.Parse(userIdClaim.Value);
         var removed = await _likeService.DeleteAsync(userId, postId);
         if (!removed)
             return NotFound();

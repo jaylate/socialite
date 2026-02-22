@@ -16,8 +16,16 @@ export interface AuthResponse {
   expiresIn?: number;
 }
 
-export interface User {
+export interface UserResponse {
   userId: number;
   username: string;
   email: string;
+}
+
+export interface AuthContextType {
+  user: UserResponse | null;
+  isLoading: boolean;
+  login: (username: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }

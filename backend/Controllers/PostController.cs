@@ -64,9 +64,13 @@ public class PostController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreatePostDto dto)
     {
-        var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+            return Unauthorized();
+
+        var userId = int.Parse(userIdClaim.Value);
         await _postService.AddAsync(userId, dto.Content);
-        return Created();
+        return NoContent();
     }
 
     [Authorize]

@@ -7,7 +7,6 @@ namespace Socialite.Controllers;
 
 [ApiController]
 [Route("api/v1/users")]
-[Authorize]
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
@@ -48,6 +47,7 @@ public class UserController : ControllerBase
         );
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateUserDto dto)
     {
@@ -58,11 +58,13 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         if (!await _userService.DeleteAsync(id))
             return NotFound();
+
         return NoContent();
     }
 }

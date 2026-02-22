@@ -10,7 +10,6 @@ import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function CreatePost() {
   const { user } = useAuth();
-  if (!user) return null;
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string>('');
@@ -22,6 +21,10 @@ export default function CreatePost() {
     const timer = setTimeout(() => setSubmitError(''), 5000);
     return () => clearTimeout(timer);
   }, [submitError]);
+
+  if (!user) {
+    return null;
+  }
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

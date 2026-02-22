@@ -2,7 +2,19 @@ import { apiConfig } from './config';
 import fetchApi from './fetchApi';
 import { withErrorReporting } from '@/lib/errors';
 import type { User, Post, CreatePostRequest } from '@/lib/types';
-import type { LoginRequest, RegisterRequest, AuthResponse } from '@/lib/types';
+import type { LoginRequest, RegisterRequest, AuthResponse, UserResponse } from '@/lib/types';
+
+async function fetchWithRetry<T>(fn: () => Promise<T>, retries = 5, delayMs = 1000): Promise<T> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (i === retries - 1) throw e;
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
+  }
+  throw new Error('Failed after retries');
+}
 
 export const postService = {
   getAll: (userId: number = apiConfig.defaultUserId, options?: RequestInit) =>
@@ -96,5 +108,15 @@ export const authService = {
       'register'
     ),
   me: () =>
-    fetchApi<{ userId: number; username: string; email: string }>('/auth/me'),
+    withErrorReporting(
+      () => fetchWithRetry(() => fetchApi<UserResponse>('/auth/me')),
+      'authService',
+      'me'
+    ),
+  logout: () =>
+    withErrorReporting(
+      () => fetchApi<void>('/auth/logout', { method: 'POST' }),
+      'authService',
+      'logout'
+    ),
 };

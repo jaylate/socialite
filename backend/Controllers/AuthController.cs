@@ -58,6 +58,14 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("jwt");
+        return NoContent();
+    }
+
     private void SetJwtCookie(string token, int expiresIn)
     {
         var cookieOptions = new CookieOptions
@@ -65,6 +73,7 @@ public class AuthController : ControllerBase
             HttpOnly = true,
             Secure = false,
             SameSite = SameSiteMode.Lax,
+            Path = "/",
             Expires = DateTime.UtcNow.AddMinutes(expiresIn)
         };
         Response.Cookies.Append("jwt", token, cookieOptions);
