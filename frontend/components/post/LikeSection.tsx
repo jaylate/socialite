@@ -15,23 +15,23 @@ export default function LikeSection({
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    setIsLikedByCurrentUser(initialLiked);
-  }, [initialLiked]);
+    const handleAuthChange = () => {
+      setIsLikedByCurrentUser(false);
+    };
+    window.addEventListener('auth-change', handleAuthChange);
+    return () => window.removeEventListener('auth-change', handleAuthChange);
+  }, []);
 
   const handleLike = async () => {
     if (isLoading) return;
     setIsLoading(true);
     setHasError(false);
     const previousLikeState = isLikedByCurrentUser;
-    setIsLikedByCurrentUser(!isLikedByCurrentUser);
 
     try {
-      await postService.likePostId(previousLikeState, postId);
-      // FIXME: If getLikesForPostId fails after likePostId succeeds,
-      // the like exists, on the server but UI reverts to previous state.
-      // Should be fixed when backend will return information
-      // about like operation either by just reporting success or likes count too
-      setLikesCount(await postService.getLikesForPostId(postId));
+      const result = await postService.likePostId(previousLikeState, postId);
+      setIsLikedByCurrentUser(result.liked);
+      setLikesCount(result.count);
     } catch {
       setHasError(true);
       setTimeout(() => {

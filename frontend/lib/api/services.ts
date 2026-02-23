@@ -1,7 +1,7 @@
 import { apiConfig } from './config';
 import fetchApi from './fetchApi';
 import { withErrorReporting } from '@/lib/errors';
-import type { User, Post, CreatePostRequest } from '@/lib/types';
+import type { User, Post, CreatePostRequest, LikeResponse } from '@/lib/types';
 import type { LoginRequest, RegisterRequest, AuthResponse, UserResponse } from '@/lib/types';
 
 async function fetchWithRetry<T>(fn: () => Promise<T>, retries = 5, delayMs = 1000): Promise<T> {
@@ -51,7 +51,7 @@ export const postService = {
   ) =>
     withErrorReporting(
       () =>
-        fetchApi<null>(`/posts/${postId}/likes`, {
+        fetchApi<LikeResponse>(`/posts/${postId}/likes`, {
           method: previousLikeState ? 'DELETE' : 'POST',
           ...options,
         }),

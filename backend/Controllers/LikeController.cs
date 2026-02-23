@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Socialite.DTOs.Likes;
 using Socialite.Services;
 
 namespace Socialite.Controllers;
@@ -44,7 +45,8 @@ public class LikeController : ControllerBase
         var like = await _likeService.AddAsync(userId, postId);
         if (like is null)
             return Conflict("Post already liked by this user");
-        return NoContent();
+        var count = await _likeService.GetCountAsync(postId);
+        return Ok(new LikeResponseDto(true, count));
     }
 
     [Authorize]
@@ -59,6 +61,7 @@ public class LikeController : ControllerBase
         var removed = await _likeService.DeleteAsync(userId, postId);
         if (!removed)
             return NotFound();
-        return NoContent();
+        var count = await _likeService.GetCountAsync(postId);
+        return Ok(new LikeResponseDto(false, count));
     }
 }

@@ -11,3 +11,8 @@ export type Post = {
 export interface CreatePostRequest {
   content: string;
 }
+
+export interface LikeResponse {
+  liked: boolean;
+  count: number;
+}
