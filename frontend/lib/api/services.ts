@@ -17,15 +17,15 @@ async function fetchWithRetry<T>(fn: () => Promise<T>, retries = 5, delayMs = 10
 }
 
 export const postService = {
-  getAll: (userId: number = apiConfig.defaultUserId, options?: RequestInit) =>
+  getAll: (options?: RequestInit) =>
     withErrorReporting(
-      () => fetchApi<Post[]>(`/posts?userId=${userId}`, options),
+      () => fetchApi<Post[]>(`/posts`, options),
       'postService',
       'getAll'
     ),
-  getById: (postId: number, userId: number = apiConfig.defaultUserId, options?: RequestInit) =>
+  getById: (postId: number, options?: RequestInit) =>
     withErrorReporting(
-      () => fetchApi<Post>(`/posts/${postId}?userId=${userId}`, options),
+      () => fetchApi<Post>(`/posts/${postId}`, options),
       'postService',
       'getById'
     ),
@@ -37,23 +37,21 @@ export const postService = {
     ),
   getLikesForPostId: (
     postId: number,
-    userId: number = apiConfig.defaultUserId,
     options?: RequestInit
   ) =>
     withErrorReporting(
-      () => fetchApi<number>(`/posts/${postId}/likes/count?userId=${userId}`, options),
+      () => fetchApi<number>(`/posts/${postId}/likes/count`, options),
       'postService',
       'getLikesForPostId'
     ),
   likePostId: (
     previousLikeState: boolean,
     postId: number,
-    userId: number = apiConfig.defaultUserId,
     options?: RequestInit
   ) =>
     withErrorReporting(
       () =>
-        fetchApi<null>(`/posts/${postId}/likes?userId=${userId}`, {
+        fetchApi<null>(`/posts/${postId}/likes`, {
           method: previousLikeState ? 'DELETE' : 'POST',
           ...options,
         }),
@@ -62,12 +60,11 @@ export const postService = {
     ),
   addPost: (
     content: CreatePostRequest,
-    userId: number = apiConfig.defaultUserId,
     options?: RequestInit
   ) =>
     withErrorReporting(
       () =>
-        fetchApi<null>(`/posts/?userId=${userId}`, {
+        fetchApi<null>(`/posts/`, {
           method: 'POST',
           body: JSON.stringify(content),
           ...options,

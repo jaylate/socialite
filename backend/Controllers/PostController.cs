@@ -24,11 +24,11 @@ public class PostController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<List<PostResponseDto>>> GetAll(
-	[FromQuery] int? userId,
 	[FromQuery] int skip = 0,
 	[FromQuery] int limit = 20)
     {
-	var posts = (await _postService.GetAllAsync())
+        var userId = GetCurrentUserId();
+	    var posts = (await _postService.GetAllAsync())
             .Select(p => new PostResponseDto(
                 p.Id,
                 p.Content,
@@ -44,10 +44,9 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<PostResponseDto>> Get(
-	int id,
-	[FromQuery] int? userId)
+    public async Task<ActionResult<PostResponseDto>> Get(int id)
     {
+        var userId = GetCurrentUserId();
         var post = await _postService.GetByIdAsync(id);
         if (post is null)
             return NotFound();
@@ -111,10 +110,10 @@ public class PostController : ControllerBase
     [HttpGet("user/{username}")]
     public async Task<ActionResult<List<PostResponseDto>>> GetByUser(
         string username,
-        [FromQuery] int? currentUserId,
         [FromQuery] int skip = 0,
         [FromQuery] int limit = 20)
     {
+        var currentUserId = GetCurrentUserId();
         var user = await _userService.GetByUsernameAsync(username);
         if (user is null)
             return NotFound();
@@ -134,5 +133,11 @@ public class PostController : ControllerBase
             .ToList();
 
         return posts;
+    }
+
+    private int? GetCurrentUserId()
+    {
+        var claim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        return claim != null ? int.Parse(claim.Value) : null;
     }
 }
