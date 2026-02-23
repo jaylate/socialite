@@ -80,10 +80,15 @@ public class PostController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdatePostDto dto)
     {
-        var updated = await _postService.UpdateAsync(id, dto.Content);
-        if (!updated)
-            return NotFound();
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null) return Unauthorized();
+        var requestingUserId = int.Parse(userIdClaim.Value);
 
+        var post = await _postService.GetByIdAsync(id);
+        if (post is null) return NotFound();
+        if (post.UserId != requestingUserId) return Forbid();
+
+        await _postService.UpdateAsync(id, dto.Content);
         return NoContent();
     }
 
@@ -91,10 +96,15 @@ public class PostController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var deleted = await _postService.DeleteAsync(id);
-        if (!deleted)
-            return NotFound();
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null) return Unauthorized();
+        var requestingUserId = int.Parse(userIdClaim.Value);
 
+        var post = await _postService.GetByIdAsync(id);
+        if (post is null) return NotFound();
+        if (post.UserId != requestingUserId) return Forbid();
+
+        await _postService.DeleteAsync(id);
         return NoContent();
     }
 

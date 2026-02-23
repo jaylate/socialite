@@ -49,10 +49,11 @@ public class UserController : ControllerBase
     [HttpPut("{username}")]
     public async Task<IActionResult> Update(string username, UpdateUserDto dto)
     {
-        var updated = await _userService.UpdateByUsernameAsync(username, dto.Username, dto.Name, dto.Bio, dto.Email);
-        if (!updated)
-            return NotFound();
+        var requestingUsername = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+        if (requestingUsername != username) return Forbid();
 
+        var updated = await _userService.UpdateByUsernameAsync(username, dto.Username, dto.Name, dto.Bio, dto.Email);
+        if (!updated) return NotFound();
         return NoContent();
     }
 
@@ -60,9 +61,10 @@ public class UserController : ControllerBase
     [HttpDelete("{username}")]
     public async Task<IActionResult> Delete(string username)
     {
-        if (!await _userService.DeleteByUsernameAsync(username))
-            return NotFound();
+        var requestingUsername = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+        if (requestingUsername != username) return Forbid();
 
+        if (!await _userService.DeleteByUsernameAsync(username)) return NotFound();
         return NoContent();
     }
 }
