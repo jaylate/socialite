@@ -1,8 +1,8 @@
 import { PageLayout, MainLayout } from '@/components/layout';
 import UserInfoCard from '@/components/user/UserInfoCard';
-import FeedContainer from '@/components/post/FeedContainer';
+import Feed from '@/components/post/Feed';
 import type { User } from '@/lib/types';
-import { userService, postService } from '@/lib/api';
+import { userService } from '@/lib/api';
 import { notFound } from 'next/navigation';
 
 export default async function User({
@@ -24,14 +24,12 @@ export default async function User({
     notFound();
   }
 
-  const getPostsByUser = () => postService.getByUser(username);
-
   return (
     <PageLayout>
       <MainLayout>
         <div className="layout-main-content">
           <UserInfoCard {...userInfo} />
-          <FeedContainer fetchPosts={getPostsByUser} />
+          <Feed type="user" username={username} />
         </div>
       </MainLayout>
     </PageLayout>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { postService } from '@/lib/api';
 import type { LikeSectionProps } from '@/lib/types';
 
@@ -13,6 +13,10 @@ export default function LikeSection({
   const [isLikedByCurrentUser, setIsLikedByCurrentUser] = useState(initialLiked);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setIsLikedByCurrentUser(initialLiked);
+  }, [initialLiked]);
 
   const handleLike = async () => {
     if (isLoading) return;

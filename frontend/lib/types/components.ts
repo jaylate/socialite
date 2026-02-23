@@ -47,5 +47,6 @@ export interface MainLayoutProps {
 }
 
 export interface FeedProps {
-  fetchPosts: () => Promise<Post[]>;
+  type: 'all' | 'user';
+  username?: string;
 }

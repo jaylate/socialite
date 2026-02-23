@@ -21,17 +21,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await authService.login({ username, password });
     const user = await authService.me();
     setUser(user);
+    window.dispatchEvent(new CustomEvent('auth-change'));
   };
 
   const register = async (username: string, email: string, password: string) => {
     await authService.register({ username, email, password });
     const user = await authService.me();
     setUser(user);
+    window.dispatchEvent(new CustomEvent('auth-change'));
   };
 
   const logout = async () => {
     await authService.logout();
     setUser(null);
+    window.dispatchEvent(new CustomEvent('auth-change'));
   };
 
   return (

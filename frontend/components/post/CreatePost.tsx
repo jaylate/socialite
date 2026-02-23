@@ -2,7 +2,6 @@
 
 import { createPost } from '@/lib/actions/post';
 import { useState, FormEvent, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { InlineError } from '@/components/error';
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
@@ -13,7 +12,6 @@ export default function CreatePost() {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string>('');
-  const router = useRouter();
 
   useEffect(() => {
     // Dismiss error after 5 seconds on display
@@ -34,7 +32,7 @@ export default function CreatePost() {
       await createPost(formData);
       setContent('');
       setSubmitError('');
-      router.refresh();
+      window.dispatchEvent(new CustomEvent('post-created'));
     } catch {
       setSubmitError('Failed to create post. Please try again.');
     } finally {
