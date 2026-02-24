@@ -9,7 +9,7 @@ public class LikeService
 
     public LikeService(ILikeRepository likeRepository)
     {
-	_likeRepository = likeRepository;
+        _likeRepository = likeRepository;
     }
 
     public async Task<IEnumerable<Like>> GetByPostAsync(int postId)

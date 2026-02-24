@@ -15,9 +15,12 @@ export async function createPost(formData: FormData) {
 
   const cookieHeader = jwtCookie ? `jwt=${jwtCookie.value}` : '';
 
-  await postService.addPost({ content }, {
-    headers: { Cookie: cookieHeader },
-  });
+  await postService.addPost(
+    { content },
+    {
+      headers: { Cookie: cookieHeader },
+    }
+  );
 
   revalidateTag('posts', 'max');
 }

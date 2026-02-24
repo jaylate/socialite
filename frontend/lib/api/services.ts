@@ -1,4 +1,3 @@
-import { apiConfig } from './config';
 import fetchApi from './fetchApi';
 import { withErrorReporting } from '@/lib/errors';
 import type { User, Post, CreatePostRequest, LikeResponse } from '@/lib/types';
@@ -18,37 +17,22 @@ async function fetchWithRetry<T>(fn: () => Promise<T>, retries = 5, delayMs = 10
 
 export const postService = {
   getAll: (options?: RequestInit) =>
-    withErrorReporting(
-      () => fetchApi<Post[]>(`/posts`, options),
-      'postService',
-      'getAll'
-    ),
+    withErrorReporting(() => fetchApi<Post[]>(`/posts`, options), 'postService', 'getAll'),
   getById: (postId: number, options?: RequestInit) =>
-    withErrorReporting(
-      () => fetchApi<Post>(`/posts/${postId}`, options),
-      'postService',
-      'getById'
-    ),
+    withErrorReporting(() => fetchApi<Post>(`/posts/${postId}`, options), 'postService', 'getById'),
   getByUser: (username: string, options?: RequestInit) =>
     withErrorReporting(
       () => fetchApi<Post[]>(`/posts/user/${username}`, options),
       'postService',
       'getByUser'
     ),
-  getLikesForPostId: (
-    postId: number,
-    options?: RequestInit
-  ) =>
+  getLikesForPostId: (postId: number, options?: RequestInit) =>
     withErrorReporting(
       () => fetchApi<number>(`/posts/${postId}/likes/count`, options),
       'postService',
       'getLikesForPostId'
     ),
-  likePostId: (
-    previousLikeState: boolean,
-    postId: number,
-    options?: RequestInit
-  ) =>
+  likePostId: (previousLikeState: boolean, postId: number, options?: RequestInit) =>
     withErrorReporting(
       () =>
         fetchApi<LikeResponse>(`/posts/${postId}/likes`, {
@@ -58,10 +42,7 @@ export const postService = {
       'postService',
       'likePostId'
     ),
-  addPost: (
-    content: CreatePostRequest,
-    options?: RequestInit
-  ) =>
+  addPost: (content: CreatePostRequest, options?: RequestInit) =>
     withErrorReporting(
       () =>
         fetchApi<null>(`/posts/`, {

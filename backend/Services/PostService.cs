@@ -9,10 +9,10 @@ public class PostService
     private readonly IUserRepository _userRepository;
 
     public PostService(
-	IPostRepository postRepository,
-	IUserRepository userRepository)
+    IPostRepository postRepository,
+    IUserRepository userRepository)
     {
-	_postRepository = postRepository;
+        _postRepository = postRepository;
         _userRepository = userRepository;
     }
 
@@ -23,38 +23,41 @@ public class PostService
 
     public async Task<IEnumerable<Post>> GetByUserIdAsync(int userId)
     {
-	return await _postRepository.GetByUserIdAsync(userId);
+        return await _postRepository.GetByUserIdAsync(userId);
     }
 
     public async Task<Post?> GetByIdAsync(int id)
     {
-	return await _postRepository.GetByIdAsync(id);
+        return await _postRepository.GetByIdAsync(id);
     }
 
     public async Task<Post> AddAsync(int userId, string content)
     {
-	if (!await _userRepository.ExistsAsync(userId)) {
-	    throw new InvalidOperationException($"User with ID {userId} not found");
-	}
+        if (!await _userRepository.ExistsAsync(userId))
+        {
+            throw new InvalidOperationException($"User with ID {userId} not found");
+        }
 
-	Post post = new Post {
-	    UserId = userId,
-	    Content = content
-	};
+        Post post = new Post
+        {
+            UserId = userId,
+            Content = content
+        };
 
-	return await _postRepository.CreateAsync(post);
+        return await _postRepository.CreateAsync(post);
     }
 
     public async Task<bool> UpdateAsync(int id, string content)
     {
-	Post? post = await _postRepository.GetByIdAsync(id);
-	if (post is null) {
-	    return false;
-	}
+        Post? post = await _postRepository.GetByIdAsync(id);
+        if (post is null)
+        {
+            return false;
+        }
 
-	post.Content = content;
-	await _postRepository.UpdateAsync(post);
-	return true;
+        post.Content = content;
+        await _postRepository.UpdateAsync(post);
+        return true;
     }
 
     public async Task<bool> DeleteAsync(int id)

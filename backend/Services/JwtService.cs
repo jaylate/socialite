@@ -24,10 +24,10 @@ public class JwtService
     public async Task<AuthResponseDto> AuthenticateAsync(LoginRequestDto request)
     {
         if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
-            return  null;
+            return null;
 
         var UserAccount = await _context.Users.FirstOrDefaultAsync(x => x.Username == request.Username);
-        if(UserAccount == null || !BCrypt.Net.BCrypt.Verify(request.Password, UserAccount.PasswordHash))
+        if (UserAccount == null || !BCrypt.Net.BCrypt.Verify(request.Password, UserAccount.PasswordHash))
             return null;
 
         var issuer = _configuration["JwtConfig:Issuer"];

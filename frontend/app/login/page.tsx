@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth/AuthContext';
 
 export default function Login() {
-
   const router = useRouter();
   const { login } = useAuth();
   const [formData, setFormData] = useState({

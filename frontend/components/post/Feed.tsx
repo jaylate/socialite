@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import PostCard from './PostCard';
 import FeedSkeleton from './FeedSkeleton';
 import { InlineError } from '@/components/error';
@@ -41,7 +41,7 @@ export default function Feed(props: FeedProps) {
       window.removeEventListener('post-created', handlePostCreated);
       window.removeEventListener('auth-change', handleAuthChange);
     };
-  }, []);
+  }, [props.type, props.username]);
 
   if (posts === null) {
     return <FeedSkeleton />;

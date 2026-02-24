@@ -14,17 +14,17 @@ public class UserService
 
     public async Task<IEnumerable<User>> GetAllAsync()
     {
-	return await _userRepository.GetAllAsync();
+        return await _userRepository.GetAllAsync();
     }
 
     public async Task<User?> GetByIdAsync(int id)
     {
-	return await _userRepository.GetByIdAsync(id);
+        return await _userRepository.GetByIdAsync(id);
     }
 
     public async Task<User?> GetByUsernameAsync(string username)
     {
-	return await _userRepository.GetByUsernameAsync(username);
+        return await _userRepository.GetByUsernameAsync(username);
     }
 
     public async Task<User> AddAsync(User user)
@@ -46,8 +46,8 @@ public class UserService
         if (bio is not null)
             user.Bio = bio;
 
-	if (email is not null)
-	    user.Email = email;
+        if (email is not null)
+            user.Email = email;
 
         await _userRepository.UpdateAsync(user);
         return true;

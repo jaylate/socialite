@@ -1,0 +1,103 @@
+# .pre-commit-config.yaml
+default_install_hook_types: [pre-commit]
+default_stages: [pre-commit]
+
+repos:
+  # =====================
+  # Frontend - TypeScript
+  # =====================
+  - repo: local
+    hooks:
+      - id: frontend-typecheck
+        name: Frontend Type Check
+        entry: bash -c "cd frontend && npm run --silent type-check"
+        language: system
+        files: ^frontend/.*\.(ts|tsx)$
+        pass_filenames: false
+
+  # =====================
+  # Frontend - ESLint
+  # =====================
+  - repo: local
+    hooks:
+      - id: frontend-lint
+        name: Frontend ESLint
+        entry: bash -c "cd frontend && npm run --silent lint:fix"
+        language: system
+        files: ^frontend/.*\.(ts|tsx|js|jsx|mjs|cjs)$
+        verbose: true
+        pass_filenames: false
+
+  # =====================
+  # Frontend - Prettier (includes CSS)
+  # =====================
+  - repo: local
+    hooks:
+      - id: frontend-format
+        name: Frontend Prettier
+        entry: bash -c "cd frontend && npm run --silent format"
+        language: system
+        files: ^frontend/.*\.(ts|tsx|js|jsx|mjs|cjs|json|yaml|yml|md|css|scss)$
+        pass_filenames: false
+
+  # =====================
+  # Frontend - Depcheck (only on package*.json changes)
+  # =====================
+  - repo: local
+    hooks:
+      - id: frontend-depcheck
+        name: Frontend Depcheck
+        entry: bash -c "cd frontend && npm run --silent depcheck"
+        language: system
+        files: ^frontend/(package\.json|package-lock\.json)$
+        pass_filenames: false
+
+  # =====================
+  # Frontend - NPM Check Updates (only on package*.json changes)
+  # =====================
+  - repo: local
+    hooks:
+      - id: frontend-ncu
+        name: Frontend NPM Check Updates
+        entry: bash -c "cd frontend && npm run --silent ncu"
+        language: system
+        files: ^frontend/(package\.json|package-lock\.json)$
+        verbose: true
+        pass_filenames: false
+
+  # =====================
+  # Backend - Build in temp directory to check for warnings/errors
+  # =====================
+  - repo: local
+    hooks:
+      - id: backend-build
+        name: Backend Build
+        entry: bash -c "cd backend && dotnet build -o /tmp/dotnet-build-socialite --no-restore --verbosity minimal --no-incremental && rm -rf /tmp/dotnet-build-socialite"
+        language: system
+        files: ^backend/.*\.cs$
+        verbose: true
+        pass_filenames: false
+
+  # =====================
+  # Backend - Format (auto-fix, like prettier)
+  # =====================
+  - repo: local
+    hooks:
+      - id: backend-format
+        name: Backend Format
+        entry: bash -c "cd backend && dotnet format --verbosity minimal"
+        language: system
+        files: ^backend/.*\.cs$
+        pass_filenames: false
+
+  # =====================
+  # Misc
+  # =====================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: check-added-large-files

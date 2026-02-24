@@ -13,9 +13,9 @@ public class PostController : ControllerBase
     private readonly LikeService _likeService;
     private readonly UserService _userService;
     public PostController(
-	PostService postService,
-	LikeService likeService,
-	UserService userService)
+    PostService postService,
+    LikeService likeService,
+    UserService userService)
     {
         _postService = postService;
         _likeService = likeService;
@@ -24,11 +24,11 @@ public class PostController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<List<PostResponseDto>>> GetAll(
-	[FromQuery] int skip = 0,
-	[FromQuery] int limit = 20)
+    [FromQuery] int skip = 0,
+    [FromQuery] int limit = 20)
     {
         var userId = GetCurrentUserId();
-	    var posts = (await _postService.GetAllAsync())
+        var posts = (await _postService.GetAllAsync())
             .Select(p => new PostResponseDto(
                 p.Id,
                 p.Content,
@@ -36,7 +36,7 @@ public class PostController : ControllerBase
                 p.User.Username,
                 p.Likes.Count,
                 p.CreatedAt,
-		userId.HasValue ? p.Likes.Any(l => l.UserId == userId.Value) : false
+        userId.HasValue ? p.Likes.Any(l => l.UserId == userId.Value) : false
             ))
             .ToList();
 
@@ -58,7 +58,7 @@ public class PostController : ControllerBase
             post.User.Username,
             post.Likes.Count,
             post.CreatedAt,
-	    userId.HasValue ? post.Likes.Any(l => l.UserId == userId.Value) : false
+        userId.HasValue ? post.Likes.Any(l => l.UserId == userId.Value) : false
         );
     }
 

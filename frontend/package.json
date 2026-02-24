@@ -11,32 +11,27 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --cache --write .",
     "format:check": "prettier --cache --check .",
-    "prepare": "husky",
-    "depcheck": "depcheck --ignore-bin-package --ignores='@tailwindcss/postcss,@types/node,@types/react-dom,prettier-plugin-tailwindcss,tailwindcss,tsc-files,typescript'",
+    "depcheck": "depcheck --ignore-bin-package --ignores='@tailwindcss/postcss,@types/node,@types/react-dom,prettier-plugin-tailwindcss,tailwindcss'",
     "ncu": "ncu",
-    "ncu:upgrade": "ncu -u",
-    "audit": "npm audit",
-    "check-deps": "npm run depcheck && npm audit"
+    "ncu:upgrade": "ncu -u"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
     "next": "16.1.6",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20.19.32",
-    "@types/react": "^19.2.13",
+    "@types/node": "^25.3.0",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "depcheck": "^1.4.7",
-    "eslint": "^9.39.2",
+    "eslint": "^9.39.3",
     "eslint-config-next": "^16.1.6",
     "eslint-config-prettier": "^10.1.8",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
-    "npm-check-updates": "^19.3.2",
-    "prettier": "3.8.1",
+    "npm-check-updates": "^19.4.1",
+    "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4",
     "tsc-files": "^1.1.4",
@@ -48,23 +43,6 @@
     "trailingComma": "es5",
     "plugins": [
       "prettier-plugin-tailwindcss"
-    ]
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "tsc-files --noEmit",
-      "eslint --cache --fix",
-      "prettier --write"
-    ],
-    "*.{js,jsx,mjs,cjs}": [
-      "eslint --cache --fix",
-      "prettier --write"
-    ],
-    "*.{css,scss,json,md,yml,yaml}": [
-      "prettier --write"
-    ],
-    "package.json": [
-      "prettier --write"
     ]
   }
 }

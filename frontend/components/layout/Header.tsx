@@ -16,10 +16,7 @@ export default function Header() {
             {user ? (
               <div className="flex items-center gap-4">
                 <span className="text-gray-600">{user.username}</span>
-                <button 
-                  onClick={logout} 
-                  className="btn-primary"
-                >
+                <button onClick={logout} className="btn-primary">
                   Logout
                 </button>
               </div>

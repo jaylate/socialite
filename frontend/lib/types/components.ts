@@ -1,5 +1,3 @@
-import type { Post } from './post';
-
 export interface LikeSectionProps {
   postId: number;
   likesCount: number;
