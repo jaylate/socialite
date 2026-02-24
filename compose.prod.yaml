@@ -2,9 +2,12 @@ services:
   frontend:
     environment:
       - NODE_ENV=production
+      - SOCIALITE_BASE_URL=${SOCIALITE_BASE_URL}
     restart: always
 
   backend:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5182
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     restart: always

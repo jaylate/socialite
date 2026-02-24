@@ -8,11 +8,12 @@ services:
       - /app/node_modules
       - /app/.next
     command: npm run dev
+    stop_signal: SIGINT
+    stop_grace_period: 2s
     ports:
       - 3000:3000
     environment:
       - NODE_ENV=development
-      - SOCIALITE_BASE_URL=http://gateway
 
   backend:
     build:
@@ -23,7 +24,10 @@ services:
       - /src/bin
       - /src/obj
     command: dotnet watch run -v detailed --non-interactive --launch-profile http
+    stop_signal: SIGINT
+    stop_grace_period: 2s
     ports:
       - 5182:5182
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - ASPNETCORE_ENVIRONMENT=Development

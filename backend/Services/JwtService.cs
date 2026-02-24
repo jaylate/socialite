@@ -14,11 +14,14 @@ public class JwtService
 {
     private readonly IConfiguration _configuration;
     private readonly SocialiteContext _context;
+    private readonly string _jwtKey;
 
     public JwtService(SocialiteContext context, IConfiguration configuration)
     {
         _context = context;
         _configuration = configuration;
+        _jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
+            ?? throw new InvalidOperationException("JWT_SECRET_KEY environment variable is required");
     }
 
     public async Task<AuthResponseDto> AuthenticateAsync(LoginRequestDto request)
@@ -32,7 +35,6 @@ public class JwtService
 
         var issuer = _configuration["JwtConfig:Issuer"];
         var audience = _configuration["JwtConfig:Audience"];
-        var key = _configuration["JwtConfig:Key"];
         var tokenValidityMins = _configuration.GetValue<int>("JwtConfig:TokenValidityMins");
         var tokenExpiryTimeStamp = DateTime.UtcNow.AddMinutes(tokenValidityMins);
 
@@ -46,7 +48,7 @@ public class JwtService
             Issuer = issuer,
             Expires = tokenExpiryTimeStamp,
             Audience = audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtKey)),
                 SecurityAlgorithms.HmacSha512Signature)
         };
 
@@ -94,7 +96,6 @@ public class JwtService
 
         var issuer = _configuration["JwtConfig:Issuer"];
         var audience = _configuration["JwtConfig:Audience"];
-        var key = _configuration["JwtConfig:Key"];
         var tokenValidityMins = _configuration.GetValue<int>("JwtConfig:TokenValidityMins");
         var tokenExpiryTimeStamp = DateTime.UtcNow.AddMinutes(tokenValidityMins);
 
@@ -109,7 +110,7 @@ public class JwtService
             Issuer = issuer,
             Expires = tokenExpiryTimeStamp,
             Audience = audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtKey)),
                 SecurityAlgorithms.HmacSha512Signature)
         };
 

@@ -3,6 +3,8 @@ services:
     build: ./infra/nginx
     ports:
       - 80:80
+    environment:
+      - SOCIALITE_INSTANCE_NAME=${SOCIALITE_INSTANCE_NAME}
     depends_on:
       - frontend
       - backend
@@ -10,7 +12,26 @@ services:
     image: socialite-frontend
     build:
       context: frontend
+      args:
+        - SOCIALITE_BASE_URL=${SOCIALITE_BASE_URL}
+    environment:
+      - SOCIALITE_BASE_URL=${SOCIALITE_BASE_URL}
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
   backend:
     image: socialite-backend
     build:
       context: backend
+    environment:
+      - SOCIALITE_INSTANCE_NAME=${SOCIALITE_INSTANCE_NAME}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5182/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

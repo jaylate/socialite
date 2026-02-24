@@ -9,6 +9,14 @@ using Socialite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new InvalidOperationException(
+        "JWT_SECRET_KEY environment variable is required. " +
+        "Please set it in your .env file or environment.");
+}
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -43,7 +51,7 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
             ValidAudience = builder.Configuration["JwtConfig:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JwtConfig:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey))
         };
         options.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
         {
@@ -76,5 +84,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGet("/healthz", () => Results.Ok()); // Healthcheck
 
 app.Run();

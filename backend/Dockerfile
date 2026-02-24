@@ -8,10 +8,10 @@ COPY . .
 
 # Publish
 FROM build AS publish
-RUN dotnet publish -c Release -o /app/out
+RUN dotnet publish -c Release -o /app/out --no-restore
 
 # Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:10.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 WORKDIR /app
 COPY --from=publish /app/out .
 ENTRYPOINT ["dotnet", "Socialite.dll"]
