@@ -50,17 +50,18 @@ export default function Feed(props: FeedProps) {
   return (
     <>
       <InlineError message={errorMessage} className="mt-10" />
-      {posts.length > 0 ? (
-        <div className="layout-feed">
-          {posts.map((post) => (
-            <div key={post.id} className="animate-fade-in-up">
-              <PostCard {...post} />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="layout-feed text-muted">No posts yet</div>
-      )}
+      {!errorMessage &&
+        (posts.length > 0 ? (
+          <div className="layout-feed">
+            {posts.map((post) => (
+              <div key={post.id} className="animate-fade-in-up">
+                <PostCard {...post} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="layout-feed text-muted">No posts yet</div>
+        ))}
     </>
   );
 }
