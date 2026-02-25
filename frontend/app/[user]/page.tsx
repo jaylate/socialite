@@ -1,4 +1,3 @@
-import { PageLayout, MainLayout } from '@/components/layout';
 import UserInfoCard from '@/components/user/UserInfoCard';
 import Feed from '@/components/post/Feed';
 import type { User } from '@/lib/types';
@@ -25,13 +24,9 @@ export default async function User({
   }
 
   return (
-    <PageLayout>
-      <MainLayout>
-        <div className="layout-main-content">
-          <UserInfoCard {...userInfo} />
-          <Feed type="user" username={username} />
-        </div>
-      </MainLayout>
-    </PageLayout>
+    <div className="layout-main-content">
+      <UserInfoCard {...userInfo} />
+      <Feed type="user" username={username} />
+    </div>
   );
 }

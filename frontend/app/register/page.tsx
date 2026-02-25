@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { PageLayout, MainLayout } from '@/components/layout';
 import { Button, Card, FormField, Input } from '@/components/ui';
 import { InlineError } from '@/components/error';
 import { useAuth } from '@/lib/auth/AuthContext';
@@ -79,88 +78,84 @@ export default function Register() {
   };
 
   return (
-    <PageLayout>
-      <MainLayout>
-        <div className="centered-container">
-          <Card
-            title="Create Account"
-            subtitle="Join Socialite"
-            titleLarge
-            footer={
-              <>
-                Already have an account?{' '}
-                <Link href="/login" className="text-primary hover:underline">
-                  Log in
-                </Link>
-              </>
-            }
+    <div className="centered-container">
+      <Card
+        title="Create Account"
+        subtitle="Join Socialite"
+        titleLarge
+        footer={
+          <>
+            Already have an account?{' '}
+            <Link href="/login" className="text-primary hover:underline">
+              Log in
+            </Link>
+          </>
+        }
+      >
+        <form onSubmit={handleSubmit} className="form-stack">
+          <FormField label="Username" htmlFor="username" error={errors.username}>
+            <Input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Choose a username"
+              disabled={isLoading}
+              className={errors.username ? 'form-input-error' : ''}
+            />
+          </FormField>
+
+          <FormField label="Email" htmlFor="email" error={errors.email}>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="your.email@example.com"
+              disabled={isLoading}
+              className={errors.email ? 'form-input-error' : ''}
+            />
+          </FormField>
+
+          <FormField label="Password" htmlFor="password" error={errors.password}>
+            <Input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Minimum 8 characters"
+              disabled={isLoading}
+              className={errors.password ? 'form-input-error' : ''}
+            />
+          </FormField>
+
+          <FormField
+            label="Confirm Password"
+            htmlFor="confirmPassword"
+            error={errors.confirmPassword}
           >
-            <form onSubmit={handleSubmit} className="form-stack">
-              <FormField label="Username" htmlFor="username" error={errors.username}>
-                <Input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  placeholder="Choose a username"
-                  disabled={isLoading}
-                  className={errors.username ? 'form-input-error' : ''}
-                />
-              </FormField>
+            <Input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Re-enter password"
+              disabled={isLoading}
+              className={errors.confirmPassword ? 'form-input-error' : ''}
+            />
+          </FormField>
 
-              <FormField label="Email" htmlFor="email" error={errors.email}>
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="your.email@example.com"
-                  disabled={isLoading}
-                  className={errors.email ? 'form-input-error' : ''}
-                />
-              </FormField>
+          <InlineError message={submitError} />
 
-              <FormField label="Password" htmlFor="password" error={errors.password}>
-                <Input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Minimum 8 characters"
-                  disabled={isLoading}
-                  className={errors.password ? 'form-input-error' : ''}
-                />
-              </FormField>
-
-              <FormField
-                label="Confirm Password"
-                htmlFor="confirmPassword"
-                error={errors.confirmPassword}
-              >
-                <Input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Re-enter password"
-                  disabled={isLoading}
-                  className={errors.confirmPassword ? 'form-input-error' : ''}
-                />
-              </FormField>
-
-              <InlineError message={submitError} />
-
-              <Button variant="rectangular" disabled={isLoading}>
-                {isLoading ? 'Creating account...' : 'Sign Up'}
-              </Button>
-            </form>
-          </Card>
-        </div>
-      </MainLayout>
-    </PageLayout>
+          <Button variant="rectangular" disabled={isLoading}>
+            {isLoading ? 'Creating account...' : 'Sign Up'}
+          </Button>
+        </form>
+      </Card>
+    </div>
   );
 }
