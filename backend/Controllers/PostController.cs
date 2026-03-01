@@ -29,6 +29,8 @@ public class PostController : ControllerBase
     {
         var userId = GetCurrentUserId();
         var posts = (await _postService.GetAllAsync())
+            .Skip(skip)
+            .Take(limit)
             .Select(p => new PostResponseDto(
                 p.Id,
                 p.Content,

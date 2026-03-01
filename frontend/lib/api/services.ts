@@ -16,13 +16,17 @@ async function fetchWithRetry<T>(fn: () => Promise<T>, retries = 5, delayMs = 10
 }
 
 export const postService = {
-  getAll: (options?: RequestInit) =>
-    withErrorReporting(() => fetchApi<Post[]>(`/posts`, options), 'postService', 'getAll'),
+  getAll: (skip: number = 0, limit: number = 20, options?: RequestInit) =>
+    withErrorReporting(
+      () => fetchApi<Post[]>(`/posts?skip=${skip}&limit=${limit}`, options),
+      'postService',
+      'getAll'
+    ),
   getById: (postId: number, options?: RequestInit) =>
     withErrorReporting(() => fetchApi<Post>(`/posts/${postId}`, options), 'postService', 'getById'),
-  getByUser: (username: string, options?: RequestInit) =>
+  getByUser: (username: string, skip: number = 0, limit: number = 20, options?: RequestInit) =>
     withErrorReporting(
-      () => fetchApi<Post[]>(`/posts/user/${username}`, options),
+      () => fetchApi<Post[]>(`/posts/user/${username}?skip=${skip}&limit=${limit}`, options),
       'postService',
       'getByUser'
     ),
