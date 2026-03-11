@@ -1,0 +1,27 @@
+name: Build backend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+          cache: true
+      - name: Restore dependencies
+        working-directory: backend
+        run: dotnet restore
+      - name: Format check
+        working-directory: backend
+        run: dotnet format --verify-no-changes --verbosity minimal || echo "::warning::Formatting issues found. Run 'dotnet format' to fix."
+      - name: Build
+        working-directory: backend
+        run: dotnet build --no-restore --verbosity minimal
