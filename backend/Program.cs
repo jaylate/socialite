@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Socialite.Data;
 using Socialite.Repositories;
@@ -20,8 +21,11 @@ if (string.IsNullOrEmpty(jwtKey))
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// Register database context with a health check
 builder.Services.AddDbContext<SocialiteContext>(options =>
     options.UseInMemoryDatabase("SocialiteDatabase"));
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<SocialiteContext>("db", tags: new[] { "ready" });
 
 // Register repositories
 builder.Services.AddScoped<IPostRepository, PostRepository>();
@@ -63,7 +67,8 @@ builder.Services.AddAuthentication(options =>
                 return System.Threading.Tasks.Task.CompletedTask;
             }
         };
-    });
+    }
+);
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -84,6 +89,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGet("/healthz", () => Results.Ok()); // Healthcheck
+
+// Setup health checks (with liveness and readyness probes support)
+app.MapHealthChecks("/healthz", new HealthCheckOptions
+{
+    Predicate = _ => false,
+});
+app.MapHealthChecks("/readyz", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready"),
+});
 
 app.Run();
